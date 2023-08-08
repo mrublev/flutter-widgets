@@ -1098,18 +1098,14 @@ class _ScrollViewWidgetState extends State<ScrollViewWidget> {
 
   @override
   void dispose() {
-    if (_verticalController != null &&
-        _dataGridConfiguration.disposeVerticalScrollController) {
-      _verticalController!
-        ..removeListener(_verticalListener)
-        ..dispose();
+    _verticalController?.removeListener(_verticalListener);
+    if (_dataGridConfiguration.disposeVerticalScrollController) {
+      _verticalController?.dispose();
     }
 
-    if (_horizontalController != null &&
-        _dataGridConfiguration.disposeHorizontalScrollController) {
-      _horizontalController!
-        ..removeListener(_horizontalListener)
-        ..dispose();
+    _horizontalController?.removeListener(_horizontalListener);
+    if (_dataGridConfiguration.disposeHorizontalScrollController) {
+      _horizontalController?.dispose();
     }
 
     super.dispose();
