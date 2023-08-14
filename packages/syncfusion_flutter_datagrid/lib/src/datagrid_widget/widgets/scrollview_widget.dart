@@ -1906,10 +1906,16 @@ class VisualContainerHelper {
     _updateColumnCount(dataGridConfiguration);
     _updateRowCount(dataGridConfiguration);
     if (rowCount > 0) {
-      for (int i = 0;
-          i <= grid_helper.getHeaderIndex(dataGridConfiguration);
-          i++) {
-        rowHeights[i] = dataGridConfiguration.headerRowHeight;
+      if (_shouldUpdateAllRowsHeight()) {
+        // update all rows height when data source is configured that way
+        _updateAllRowsHeight();
+      } else {
+        // update only headers height (row's height would be calculated lazily during scrolling)
+        for (int i = 0;
+            i <= grid_helper.getHeaderIndex(dataGridConfiguration);
+            i++) {
+          rowHeights[i] = dataGridConfiguration.headerRowHeight;
+        }
       }
     }
 
@@ -2214,4 +2220,40 @@ class Range {
 
   /// Checks whether the range is empty or not.
   bool isEmpty() => start < 0 || end < 0;
+}
+
+/// Helper extension for easier maintenance with upstream changes
+extension VisualContainerHelperTotalHeight on VisualContainerHelper {
+  bool _shouldUpdateAllRowsHeight() {
+    final DataGridConfiguration dataGridConfiguration = dataGridStateDetails();
+    final bool supportDynamicRowHeight =
+        dataGridConfiguration.onQueryRowHeight != null;
+    return supportDynamicRowHeight &&
+        dataGridConfiguration.source.shouldRecalculateRowsTotalHeight();
+  }
+
+  /// This method used to re-calculate height for all rows, so
+  /// scrolling can work smooth without jumping or synced to another scrolling
+  /// correctly.Should be called once data is changed
+  void _updateAllRowsHeight() {
+    final DataGridConfiguration dataGridConfiguration = dataGridStateDetails();
+
+    final int? footerIndex = dataGridConfiguration.footer != null
+        ? grid_helper.getFooterViewRowIndex(dataGridConfiguration)
+        : null;
+    final int headerIndex = grid_helper.getHeaderIndex(dataGridConfiguration);
+
+    for (int i = 0; i < rowCount; i++) {
+      final double height = rowHeights[i];
+      double? newHeight;
+      if (i <= headerIndex) {
+        newHeight = dataGridConfiguration.headerRowHeight;
+      } else if (footerIndex == null || i != footerIndex) {
+        newHeight = rowGenerator.queryRowHeight(i, height);
+      }
+      if (newHeight != null && newHeight != height) {
+        rowHeights[i] = newHeight;
+      }
+    }
+  }
 }
