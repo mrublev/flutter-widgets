@@ -388,6 +388,41 @@ abstract class SfLocalizations {
   /// the CANCEL confirmation button.
   String get pdfPasswordDialogCancelLabel;
 
+  /// Label that is displayed in the header of signature pad dialog in PdfViewer
+  String get pdfSignaturePadDialogHeaderTextLabel;
+
+  /// Label that is displayed in the signature pad dialog in PdfViewer to
+  /// represent the Pen Color text
+  String get pdfSignaturePadDialogPenColorLabel;
+
+  /// Label that is displayed in the signature pad dialog of PdfViewer to
+  /// represent the CLEAR confirmation button.
+  String get pdfSignaturePadDialogClearLabel;
+
+  /// Label that is displayed in the signature pad dialog of PdfViewer to
+  /// represent the SAVE confirmation button.
+  String get pdfSignaturePadDialogSaveLabel;
+
+  /// Label that is displayed in the text selection context menu of
+  /// PdfViewer for copying the selected text.
+  String get pdfTextSelectionMenuCopyLabel;
+
+  /// Label that is displayed in the text selection context menu of
+  /// PdfViewer for highlighting the selected text.
+  String get pdfTextSelectionMenuHighlightLabel;
+
+  /// Label that is displayed in the text selection context menu of
+  /// PdfViewer for striking out the selected text.
+  String get pdfTextSelectionMenuStrikethroughLabel;
+
+  /// Label that is displayed in the text selection context menu of
+  /// PdfViewer for underlining the selected text.
+  String get pdfTextSelectionMenuUnderlineLabel;
+
+  /// Label that is displayed in the text selection context menu of
+  /// PdfViewer for underlining the selected text with squiggly style.
+  String get pdfTextSelectionMenuSquigglyLabel;
+
   /// The label is displayed as the text for the legend in the cartesian chart.
   /// When the name of the series is not specified, then this label with the
   /// series count is displayed as a legend.
@@ -758,6 +793,33 @@ class _DefaultLocalizations implements SfLocalizations {
 
   @override
   String get pdfPasswordDialogCancelLabel => 'CANCEL';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => 'Draw your signature';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => 'Pen Color';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => 'CLEAR';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => 'SAVE';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => 'Copy';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => 'Highlight';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => 'Strikethrough';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => 'Underline';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => 'Squiggly';
 
   @override
   String get series => 'Series';

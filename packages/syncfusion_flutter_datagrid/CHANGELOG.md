@@ -2,6 +2,43 @@
 
 **Features**
 
+* Provided support for grouping a collection of records based on particular categories, offering various customization options. This includes single and multiple column grouping, along with options to customize appearances and interactively expand and collapse a group.
+* Provided support for retrieving the start and end index of visible rows and columns based on the row region in the DataGrid.
+
+## [24.1.41] - 12/06/2023
+
+**Bugs**
+
+* The scroll offset is now appropriately reset when changing the data source during runtime.
+
+## [23.1.36] - 09/15/2023
+
+**Features**
+
+* Provided support for displaying column header icons, such as sort and filter icons, when hovering over the column header cells.
+
+## [22.2.9] - 08/15/2023
+
+**Bugs**
+
+* The RangeError exception will no longer be thrown when changing the showCheckboxColumn property along with selection mode.
+
+## [22.2.5] - 07/27/2023
+
+**Features**
+
+* Now, the current date is automatically selected as the initial date in the date picker within the Advanced UI filter menu when it falls between the first and last dates of the column or matches either of them.
+
+## [22.1.39] - 07/18/2023
+
+**Bugs**
+
+* The state of the header checkbox cell is reset when updating the data grid rows.
+
+## [22.1.34] - 06/21/2023
+
+**Features**
+
 * Provided the support to customize the visibility of horizontal and vertical scrollbars in the DataGrid.
 * Provide the support to show the filter icon when the mouse hovers over the column header. Users have the option to enable or disable this hover feature by `showFilterIconOnHover`.
 * Provided the support to set a `key` to the `DataGridRow`, it helps automate the data grid rows during automated testing.

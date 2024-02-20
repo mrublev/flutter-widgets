@@ -735,10 +735,11 @@ class _PasswordUtility {
         }
       });
 
-      if (mechanism != null && mechanism!.startsWith('PBEwithMD2') ||
-          mechanism!.startsWith('PBEwithMD5') ||
-          mechanism!.startsWith('PBEwithSHA-1') ||
-          mechanism!.startsWith('PBEwithSHA-256')) {
+      if (mechanism != null &&
+          (mechanism!.startsWith('PBEwithMD2') ||
+              mechanism!.startsWith('PBEwithMD5') ||
+              mechanism!.startsWith('PBEwithSHA-1') ||
+              mechanism!.startsWith('PBEwithSHA-256'))) {
         if (mechanism!.endsWith('AES-CBC-BC') ||
             mechanism!.endsWith('AES-CBC-OPENSSL')) {
           result = _cipherUtils.getCipher('AES/CBC');
@@ -1642,8 +1643,7 @@ class _KeyIdentifier extends Asn1Encode {
   Asn1Octet? _keyIdentifier;
   DerInteger? _serialNumber;
   //Properties
-  List<int>? get keyID =>
-      _keyIdentifier == null ? null : _keyIdentifier!.getOctets();
+  List<int>? get keyID => _keyIdentifier?.getOctets();
   //Implementation
   static _KeyIdentifier getKeyIdentifier(dynamic obj) {
     _KeyIdentifier result;

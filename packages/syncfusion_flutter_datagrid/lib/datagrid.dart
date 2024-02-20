@@ -32,6 +32,8 @@ export './src/datagrid_widget/sfdatagrid.dart'
         refreshEffectiveRows,
         performSorting,
         updateDataPager,
+        getRowsPerPage,
+        performGrouping,
         DataGridThemeHelper;
 export './src/datapager/sfdatapager.dart'
     hide SfDataPagerState, DataPagerThemeHelper;

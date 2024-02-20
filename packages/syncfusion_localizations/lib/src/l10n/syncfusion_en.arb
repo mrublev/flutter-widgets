@@ -113,6 +113,30 @@
       "type": "text"
   }, 
 
+  "pdfSignaturePadDialogHeaderTextLabel": "Draw your signature",
+  "@pdfSignaturePadDialogHeaderTextLabel": {
+      "description": "Label that is displayed in the header of signature pad dialog in PdfViewer.",
+      "type": "text"
+  },
+
+  "pdfSignaturePadDialogPenColorLabel": "Pen Color",
+  "@pdfSignaturePadDialogPenColorLabel": {
+      "description": "Label that is displayed in the signature pad dialog in PdfViewer to represent the Pen Color text.",
+      "type": "text"
+  },
+
+  "pdfSignaturePadDialogClearLabel": "CLEAR",
+  "@pdfSignaturePadDialogClearLabel": {
+      "description": "Label that is displayed in the signature pad dialog of PdfViewer to represent the CLEAR confirmation button.",
+      "type": "text"
+  },
+
+  "pdfSignaturePadDialogSaveLabel": "SAVE",
+  "@pdfSignaturePadDialogSaveLabel": {
+      "description": " Label that is displayed in the signature pad dialog of PdfViewer to represent the SAVE confirmation button.",
+      "type": "text"
+  },
+
   "allowedViewDayLabel": "Day",
   "@allowedViewDayLabel": {
       "description": "Label that is displayed in the calendar header view when allowed views have calendar day view.",
@@ -364,6 +388,36 @@
       "description": "Label that is displayed in the hyperlink dialog of PdfViewer to represent the CANCEL confirmation button.",
       "type": "text"
   },
+
+  "pdfTextSelectionMenuCopyLabel": "Copy",
+   "@pdfTextSelectionMenuCopyLabel": {
+        "description": "Label that is displayed in the text selection context menu of PdfViewer for copying the selected text.",
+        "type": "text"
+   },
+
+   "pdfTextSelectionMenuHighlightLabel": "Highlight",
+    "@pdfTextSelectionMenuHighlightLabel": {
+         "description": "Label that is displayed in the text selection context menu of PdfViewer for highlighting the selected text.",
+         "type": "text"
+    },
+
+    "pdfTextSelectionMenuStrikethroughLabel": "Strikethrough",
+     "@pdfTextSelectionMenuStrikethroughLabel": {
+          "description": "Label that is displayed in the text selection context menu of PdfViewer for striking through the selected text.",
+          "type": "text"
+     },
+
+    "pdfTextSelectionMenuUnderlineLabel": "Underline",
+     "@pdfTextSelectionMenuUnderlineLabel": {
+          "description": "Label that is displayed in the text selection context menu of PdfViewer for underlining the selected text.",
+          "type": "text"
+     },
+
+     "pdfTextSelectionMenuSquigglyLabel": "Squiggly",
+      "@pdfTextSelectionMenuSquigglyLabel": {
+           "description": "Label that is displayed in the text selection context menu of PdfViewer for underlining the selected text with squiggly style.",
+           "type": "text"
+      },
 
   "afterDataGridFilteringLabel": "After",
   "@afterDataGridFilteringLabel": {

@@ -1479,6 +1479,12 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
   List<CustomPainterSemantics> _getSemanticsBuilder(Size size) {
     final List<CustomPainterSemantics> semanticsBuilder =
         <CustomPainterSemantics>[];
+
+    final RenderBox? child = firstChild;
+    if (child != null) {
+      return semanticsBuilder;
+    }
+
     if (appointmentCollection.isEmpty) {
       return semanticsBuilder;
     }
@@ -1529,6 +1535,18 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
     }
 
     return semanticsBuilder;
+  }
+
+  @override
+  void visitChildrenForSemantics(RenderObjectVisitor visitor) {
+    RenderBox? child = firstChild;
+    if (child == null) {
+      return;
+    }
+    while (child != null) {
+      visitor(child);
+      child = childAfter(child);
+    }
   }
 
   @override
@@ -1818,7 +1836,7 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
             appointment.recurrenceRule != null &&
                 appointment.recurrenceRule!.isNotEmpty;
         final double iconTextSize = _getTextSize(
-            appointmentRect, textSize * _textPainter.textScaleFactor);
+            appointmentRect, _textPainter.textScaler.scale(textSize));
         const double iconPadding = 2;
         //// Padding 4 is left and right 2 padding.
         final double iconSize = iconTextSize + (2 * iconPadding);
@@ -2073,7 +2091,8 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
       }
 
       final List<CalendarAppointment> appointmentLists =
-          _getSpecificDateVisibleAppointment(currentVisibleDate);
+          AppointmentHelper.getSpecificDateVisibleAppointment(
+              currentVisibleDate, visibleAppointments);
       appointmentLists.sort(
           (CalendarAppointment app1, CalendarAppointment app2) =>
               app1.actualStartTime.compareTo(app2.actualStartTime));
@@ -2119,29 +2138,6 @@ class _AppointmentRenderObject extends CustomCalendarRenderObject {
         }
       }
     }
-  }
-
-  /// Returns the specific date appointment collection by filtering the
-  /// appointments from passed visible appointment collection.
-  List<CalendarAppointment> _getSpecificDateVisibleAppointment(DateTime? date) {
-    final List<CalendarAppointment> appointmentCollection =
-        <CalendarAppointment>[];
-    if (date == null || visibleAppointments == null) {
-      return appointmentCollection;
-    }
-
-    final DateTime startDate = AppointmentHelper.convertToStartTime(date);
-    final DateTime endDate = AppointmentHelper.convertToEndTime(date);
-
-    for (int j = 0; j < visibleAppointments!.length; j++) {
-      final CalendarAppointment appointment = visibleAppointments![j];
-      if (AppointmentHelper.isAppointmentWithinVisibleDateRange(
-          appointment, startDate, endDate)) {
-        appointmentCollection.add(appointment);
-      }
-    }
-
-    return appointmentCollection;
   }
 
   void _updateAppointmentHovering(RRect rect, Canvas canvas) {
@@ -2692,6 +2688,6 @@ TextPainter _updateTextPainter(TextSpan span, TextPainter textPainter,
   textPainter.textDirection = TextDirection.ltr;
   textPainter.textAlign = isRTL ? TextAlign.right : TextAlign.left;
   textPainter.textWidthBasis = TextWidthBasis.longestLine;
-  textPainter.textScaleFactor = textScaleFactor;
+  textPainter.textScaler = TextScaler.linear(textScaleFactor);
   return textPainter;
 }

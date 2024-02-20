@@ -158,7 +158,7 @@ class AppointmentHelper {
     /// hence to rectify this tha value 1.5 used, and tested with multiple
     /// device.
     final int iconStartPosition = (textPainter.height -
-            (icon.style!.fontSize! * textPainter.textScaleFactor)) ~/
+            (textPainter.textScaler.scale(icon.style!.fontSize!))) ~/
         1.5;
     return rect.top -
         ((textPainter.height - rect.height) / 2) -
@@ -212,6 +212,30 @@ class AppointmentHelper {
       DateTime viewStartDate, DateTime viewEndDate) {
     return appStartTime.isBefore(viewStartDate) &&
         isSameOrBeforeDate(viewEndDate, appEndTime);
+  }
+
+  /// Returns the specific date appointment collection by filtering the
+  /// appointments from passed visible appointment collection.
+  static List<CalendarAppointment> getSpecificDateVisibleAppointment(
+      DateTime? date, List<CalendarAppointment>? visibleAppointments) {
+    final List<CalendarAppointment> appointmentCollection =
+        <CalendarAppointment>[];
+    if (date == null || visibleAppointments == null) {
+      return appointmentCollection;
+    }
+
+    final DateTime startDate = convertToStartTime(date);
+    final DateTime endDate = convertToEndTime(date);
+
+    for (int j = 0; j < visibleAppointments.length; j++) {
+      final CalendarAppointment appointment = visibleAppointments[j];
+      if (isAppointmentWithinVisibleDateRange(
+          appointment, startDate, endDate)) {
+        appointmentCollection.add(appointment);
+      }
+    }
+
+    return appointmentCollection;
   }
 
   /// Return appointment collection based on the date.
@@ -585,7 +609,8 @@ class AppointmentHelper {
     if (isTimelineMonth) {
       return isSameDate(
               currentApp.actualStartTime, appointment.actualStartTime) ||
-          isSameDate(currentApp.actualEndTime, appointment.actualEndTime);
+          isSameDate(currentApp.actualStartTime, appointment.actualEndTime) ||
+          isSameDate(currentApp.actualEndTime, appointment.actualStartTime);
     }
 
     if (CalendarViewHelper.isSameTimeSlot(

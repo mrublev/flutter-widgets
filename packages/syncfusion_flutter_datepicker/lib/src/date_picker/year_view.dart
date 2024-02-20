@@ -3088,7 +3088,7 @@ class _RangeSelectionRenderObject extends _IYearViewRenderObject {
       _todayHighlightPaint.color =
           rangeSelectionColor ?? datePickerTheme.rangeSelectionColor!;
       _textPainter.text = yearText;
-      _textPainter.layout(minWidth: cellWidth, maxWidth: cellWidth);
+      _textPainter.layout(maxWidth: cellWidth);
     } else if (isEndRange) {
       _todayHighlightPaint.color =
           endRangeSelectionColor ?? datePickerTheme.endRangeSelectionColor!;
@@ -3358,7 +3358,7 @@ class _ExtendableRangeSelectionRenderObject extends _IYearViewRenderObject {
       _todayHighlightPaint.color =
           rangeSelectionColor ?? datePickerTheme.rangeSelectionColor!;
       _textPainter.text = yearText;
-      _textPainter.layout(minWidth: cellWidth, maxWidth: cellWidth);
+      _textPainter.layout(maxWidth: cellWidth);
     } else if (isEndRange) {
       _todayHighlightPaint.color =
           endRangeSelectionColor ?? datePickerTheme.endRangeSelectionColor!;
@@ -3609,7 +3609,7 @@ class _MultiRangeSelectionRenderObject extends _IYearViewRenderObject {
       _todayHighlightPaint.color =
           rangeSelectionColor ?? datePickerTheme.rangeSelectionColor!;
       _textPainter.text = yearText;
-      _textPainter.layout(minWidth: cellWidth, maxWidth: cellWidth);
+      _textPainter.layout(maxWidth: cellWidth);
     } else if (isEndRange) {
       _todayHighlightPaint.color =
           endRangeSelectionColor ?? datePickerTheme.endRangeSelectionColor!;
@@ -3896,7 +3896,8 @@ void _drawYearCells(
   }
 
   final dynamic today = DateRangePickerHelper.getToday(yearView.isHijri);
-  yearView._textPainter.textScaleFactor = yearView.textScaleFactor;
+  yearView._textPainter.textScaler =
+      TextScaler.linear(yearView.textScaleFactor);
 
   const double decorationPadding = 1;
   const double selectionPadding = 3;
@@ -3993,7 +3994,7 @@ void _drawYearCells(
       );
 
       yearView._textPainter.text = yearText;
-      yearView._textPainter.layout(minWidth: cellWidth, maxWidth: cellWidth);
+      yearView._textPainter.layout(maxWidth: cellWidth);
 
       final double highlightPadding =
           yearView.selectionRadius == -1 ? 10 : yearView.selectionRadius;

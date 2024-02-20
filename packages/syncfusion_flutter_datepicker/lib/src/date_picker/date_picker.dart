@@ -247,8 +247,10 @@ class SfDateRangePicker extends StatelessWidget {
       this.extendableRangeSelectionDirection =
           ExtendableRangeSelectionDirection.both})
       : assert(headerHeight >= -1),
-        assert(minDate == null || maxDate == null || minDate.isBefore(maxDate)),
-        assert(minDate == null || maxDate == null || maxDate.isAfter(minDate)),
+        assert(minDate == null ||
+            maxDate == null ||
+            minDate.isBefore(maxDate) ||
+            minDate == maxDate),
         assert(viewSpacing >= 0),
         initialSelectedDate =
             controller != null && controller.selectedDate != null
@@ -5598,6 +5600,7 @@ class _SfDateRangePickerState extends State<_SfDateRangePicker>
 
   @override
   void initState() {
+    _textScaleFactor = 1;
     _isRtl = false;
     //// Update initial values to controller.
     _initPickerController();
@@ -5624,7 +5627,7 @@ class _SfDateRangePickerState extends State<_SfDateRangePicker>
 
   @override
   void didChangeDependencies() {
-    _textScaleFactor = MediaQuery.of(context).textScaleFactor;
+    _textScaleFactor = MediaQuery.textScalerOf(context).scale(_textScaleFactor);
     final TextDirection direction = Directionality.of(context);
     // default width value will be device width when the widget placed inside a
     // infinity width widget
@@ -8306,7 +8309,7 @@ class _PickerHeaderPainter extends CustomPainter {
     double xPosition = 0;
     _textPainter.textDirection = TextDirection.ltr;
     _textPainter.textWidthBasis = TextWidthBasis.longestLine;
-    _textPainter.textScaleFactor = textScaleFactor;
+    _textPainter.textScaler = TextScaler.linear(textScaleFactor);
     _textPainter.maxLines = 1;
 
     _headerText = '';
@@ -8354,7 +8357,7 @@ class _PickerHeaderPainter extends CustomPainter {
 
       double textWidth = ((currentViewIndex + 1) * width) - xPosition;
       textWidth = textWidth > 0 ? textWidth : 0;
-      _textPainter.layout(minWidth: textWidth, maxWidth: textWidth);
+      _textPainter.layout(maxWidth: textWidth);
 
       if (headerStyle.textAlign == TextAlign.center) {
         xPosition = (currentViewIndex * width) +
@@ -8588,9 +8591,9 @@ class _PickerViewHeaderPainter extends CustomPainter {
           style: dayTextStyle,
         );
 
-        _textPainter.textScaleFactor = textScaleFactor;
+        _textPainter.textScaler = TextScaler.linear(textScaleFactor);
         _textPainter.text = dayTextSpan;
-        _textPainter.layout(minWidth: width, maxWidth: width);
+        _textPainter.layout(maxWidth: width);
         yPosition = (viewHeaderHeight - _textPainter.height) / 2;
         _textPainter.paint(
             canvas,

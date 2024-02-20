@@ -995,7 +995,7 @@ class _TimelineRenderObject extends CustomCalendarRenderObject {
     final TextPainter painter = TextPainter(
         textDirection: TextDirection.ltr,
         maxLines: 1,
-        textScaleFactor: textScaleFactor,
+        textScaler: TextScaler.linear(textScaleFactor),
         textAlign: isRTL ? TextAlign.right : TextAlign.left,
         textWidthBasis: TextWidthBasis.longestLine);
 
@@ -1319,7 +1319,7 @@ class TimelineViewHeaderView extends CustomPainter {
       _dayTextPainter.textDirection = TextDirection.ltr;
       _dayTextPainter.textAlign = TextAlign.left;
       _dayTextPainter.textWidthBasis = TextWidthBasis.longestLine;
-      _dayTextPainter.textScaleFactor = textScaleFactor;
+      _dayTextPainter.textScaler = TextScaler.linear(textScaleFactor);
 
       final TextSpan dateTextSpan =
           TextSpan(text: dateText, style: dateTextStyle);
@@ -1328,7 +1328,7 @@ class TimelineViewHeaderView extends CustomPainter {
       _dateTextPainter.textDirection = TextDirection.ltr;
       _dateTextPainter.textAlign = TextAlign.left;
       _dateTextPainter.textWidthBasis = TextWidthBasis.longestLine;
-      _dateTextPainter.textScaleFactor = textScaleFactor;
+      _dateTextPainter.textScaler = TextScaler.linear(textScaleFactor);
 
       _dayTextPainter.layout(maxWidth: childWidth);
       _dateTextPainter.layout(maxWidth: childWidth);
@@ -1359,16 +1359,16 @@ class TimelineViewHeaderView extends CustomPainter {
     if (isRTL) {
       _dateTextPainter.paint(
           canvas,
+          Offset(size.width - _xPosition - _padding - _dateTextPainter.width,
+              viewHeaderHeight / 2 - _dateTextPainter.height / 2));
+      _dayTextPainter.paint(
+          canvas,
           Offset(
               size.width -
                   _xPosition -
                   (_padding * 2) -
                   _dayTextPainter.width -
                   _dateTextPainter.width,
-              viewHeaderHeight / 2 - _dateTextPainter.height / 2));
-      _dayTextPainter.paint(
-          canvas,
-          Offset(size.width - _xPosition - _padding - _dayTextPainter.width,
               viewHeaderHeight / 2 - _dayTextPainter.height / 2));
     } else {
       _dateTextPainter.paint(
@@ -1406,11 +1406,20 @@ class TimelineViewHeaderView extends CustomPainter {
     if (viewHeaderNotifier.value != null && !isBlackoutDate) {
       _addMouseHovering(canvas, size, childWidth);
     }
-    _dateTextPainter.paint(canvas, Offset(startXPosition, startYPosition));
-    _dayTextPainter.paint(
-        canvas,
-        Offset(startXPosition + _dateTextPainter.width + leftPadding,
-            startYPosition));
+    if (!isRTL) {
+      _dateTextPainter.paint(canvas, Offset(startXPosition, startYPosition));
+      _dayTextPainter.paint(
+          canvas,
+          Offset(startXPosition + _dateTextPainter.width + leftPadding,
+              startYPosition));
+    } else {
+      _dayTextPainter.paint(canvas, Offset(startXPosition, startYPosition));
+      _dateTextPainter.paint(
+          canvas,
+          Offset(startXPosition + _dayTextPainter.width + leftPadding,
+              startYPosition));
+    }
+
     if (isRTL) {
       _xPosition -= childWidth;
     } else {

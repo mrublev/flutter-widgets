@@ -226,6 +226,33 @@ class SfLocalizationsAf extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'van';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'DUIDELIK';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Teken jou handtekening';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Pen Kleur';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SPAAR';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopieer';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Merk';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Snorkelend';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Strek deur';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Onderstreep';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -543,6 +570,33 @@ class SfLocalizationsAm extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'የ';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'አጽዳ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'ፊርማዎን ይሳሉ';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'የብዕር ቀለም';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'አስቀምጥ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'ቅዳ';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'አድምቅ';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'በቅንጦት';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'አድማ';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'ይሰመርበት';
+
+  @override
   String get rabi1Label => r'ረቢዑል አወል';
 
   @override
@@ -854,6 +908,33 @@ class SfLocalizationsAr extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'من';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'واضح';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'ارسم توقيعك';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'لون القلم';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'يحفظ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'ينسخ';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'تسليط الضوء';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'متعرج';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'يتوسطه خط';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'تسطير';
 
   @override
   String get rabi1Label => r'ربيع الأول';
@@ -1176,6 +1257,33 @@ class SfLocalizationsAz extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'of';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'TƏMİZLƏ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'İmzanızı çəkin';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Qələm Rəngi';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'YADDA SAXLA';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopyalayın';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Vurğulayın';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'üstü üstü';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Altını çiz';
+
+  @override
   String get rabi1Label => r'Rəbiul-əvvəl';
 
   @override
@@ -1494,6 +1602,33 @@ class SfLocalizationsBe extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'з';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'ЯСНА';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Намалюйце свой подпіс';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Колер ручкі';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ЗАХАВАЦЬ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Копія';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Вылучыць';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Звілістыя';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Закрэсліванне';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Падкрэсліце';
 
   @override
   String get rabi1Label => r'Рабі аль-аўваль';
@@ -1816,6 +1951,33 @@ class SfLocalizationsBg extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'на';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ЯСНО';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Начертайте своя подпис';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Цвят на писалката';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ЗАПАЗЕТЕ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'копие';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Маркирайте';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'криволичещо';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Зачертано';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Подчертайте';
+
+  @override
   String get rabi1Label => r'Раби ал-аввал';
 
   @override
@@ -2132,6 +2294,33 @@ class SfLocalizationsBn extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'এর';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'পরিষ্কার';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'আপনার স্বাক্ষর আঁকুন';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'কলমের রঙ';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'সংরক্ষণ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'কপি';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'লক্ষণীয় করা';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'স্কুইগ্লি';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'স্ট্রাইকথ্রু';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'আন্ডারলাইন করুন';
 
   @override
   String get rabi1Label => r'রবিউল আউয়াল';
@@ -2454,6 +2643,33 @@ class SfLocalizationsBs extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'of';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'CLEAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Nacrtajte svoj potpis';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Pen Color';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SAVE';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopiraj';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Istaknite';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Precrtano';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Podvući';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -2772,6 +2988,34 @@ class SfLocalizationsCa extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'de';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'CLAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Dibuixa la teva signatura';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Color del bolígraf';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'DESA';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Còpia';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Ressaltar';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Tallat';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Subratllar';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -3093,6 +3337,33 @@ class SfLocalizationsCs extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'z';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'PRŮHLEDNÁ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Nakreslete svůj podpis';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Barva pera';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ULOŽIT';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'kopírovat';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Zvýraznit';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Zkrouceně';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Přeškrtnutí';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Zdůraznit';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -3410,6 +3681,33 @@ class SfLocalizationsDa extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'af';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'KLAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Tegn din signatur';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Pen farve';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'GEMME';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopi';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Fremhæv';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Krydret';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Gennemstregning';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Understrege';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -3731,6 +4029,34 @@ class SfLocalizationsDe extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'von';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'KLAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Zeichnen Sie Ihre Unterschrift';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Stiftfarbe';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SPEICHERN';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopieren';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Markieren';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Schnörkellos';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Durchgestrichen';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Unterstreichen';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -4056,6 +4382,34 @@ class SfLocalizationsEl extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'του';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ΣΑΦΗ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Σχεδιάστε την υπογραφή σας';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Χρώμα στυλό';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ΑΠΟΘΗΚΕΥΣΕΤΕ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'αντίγραφο';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Αποκορύφωμα';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Στριμμένος';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Strikethrough';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Υπογραμμίζω';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -4374,6 +4728,33 @@ class SfLocalizationsEn extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'of';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'CLEAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Draw your signature';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Pen Color';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SAVE';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Copy';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Highlight';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Strikethrough';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Underline';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -4695,6 +5076,18 @@ class SfLocalizationsEs extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'de';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'CLARO';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Dibuja tu firma';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Color de la pluma';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'AHORRAR';
+
+  @override
   String get rabi1Label => r'Rabí al-awwal';
 
   @override
@@ -4702,6 +5095,21 @@ class SfLocalizationsEs extends SfGlobalLocalizations {
 
   @override
   String get rajabLabel => r'Rayab';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Copiar';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Destacar';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Ondulado';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Tachado';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Subrayar';
 
   @override
   String get ramadanLabel => r'Ramadán';
@@ -5012,6 +5420,33 @@ class SfLocalizationsEt extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'kohta';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'SELGE';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Joonistage oma allkiri';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Pliiatsi värv';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SALVESTA';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopeeri';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Tõstke esile';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Läbikriipsutatud';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Allajoonimine';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -5334,6 +5769,33 @@ class SfLocalizationsEu extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'de';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ARGI';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Marraztu zure sinadura';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Boligrafoaren kolorea';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'GORDE';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopiatu';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Nabarmendu';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Zurrunbiloa';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Markatua';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Azpimarratu';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -5650,6 +6112,33 @@ class SfLocalizationsFa extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'از';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'پاک کردن';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'امضاتو بکش';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'رنگ قلم';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'صرفه جویی';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'کپی 🀄';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'برجسته';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'خنگ';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'ضربه زدن';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'زیر خط بکشید';
 
   @override
   String get rabi1Label => r'ربیع الاول';
@@ -5972,6 +6461,34 @@ class SfLocalizationsFi extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'/';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ASIA SELVÄ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Piirrä allekirjoituksesi';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Kynän väri';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'TALLENTAA';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopio';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Kohokohta';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Koukeroinen';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Yliviivattu';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Korostaa';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -6291,6 +6808,33 @@ class SfLocalizationsFil extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'ng';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'MALINAW';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Iguhit ang iyong lagda';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Kulay ng Panulat';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'MAGTIPID';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopya';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'I-highlight';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Nakapikit';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Strikethrough';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Salungguhit';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -6617,6 +7161,34 @@ class SfLocalizationsFr extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'de';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'CLAIR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Dessinez votre signature';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Couleur du stylo';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SAUVEGARDER';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Copie';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Souligner';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Onduleux';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Barré';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Souligner';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -6933,6 +7505,33 @@ class SfLocalizationsGl extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'de';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'BORRAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Debuxa a túa sinatura';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Cor da pluma';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'GARDAR';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Copiar';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Destacar';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Esquivo';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Tachado';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Subliñado';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -7254,6 +7853,33 @@ class SfLocalizationsGu extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'ના';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ચોખ્ખુ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'તમારી સહી દોરો';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'પેન કલર';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'સાચવો';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'નકલ કરો';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'હાઇલાઇટ કરો';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'સ્ક્વિગલી';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'સ્ટ્રાઈકથ્રુ';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'રેખાંકિત કરો';
+
+  @override
   String get rabi1Label => r'રબી અલ અવ્વલ';
 
   @override
@@ -7570,6 +8196,33 @@ class SfLocalizationsHe extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'שֶׁל';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'ברור';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'צייר את החתימה שלך';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'צבע עט';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'להציל';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'עותק';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'שִׂיא';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'מתפתל';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'חוצה';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'לָשִׂים דָגֵשׁ';
 
   @override
   String get rabi1Label => r'רבי אל אווול';
@@ -7891,6 +8544,33 @@ class SfLocalizationsHi extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'का';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'स्पष्ट';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'अपना हस्ताक्षर बनाएं';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'कलम का रंग';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'बचाना';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'प्रतिलिपि';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'प्रमुखता से दिखाना';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'टेढ़ा-मेढ़ा';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'स्ट्राइकथ्रू';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'रेखांकन';
+
+  @override
   String get rabi1Label => r'रबी अल-अव्वल';
 
   @override
@@ -8209,6 +8889,33 @@ class SfLocalizationsHr extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'od';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'ČISTO';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Nacrtajte svoj potpis';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Boja olovke';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'UŠTEDJETI';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopirati';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Istaknuti';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'vijugavo';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Precrtano';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Naglasiti';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -8532,6 +9239,34 @@ class SfLocalizationsHu extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'nak,-nek';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'EGYÉRTELMŰ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Rajzolja le az aláírását';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Toll színe';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'MEGMENT';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Másolat';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Kiemel';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'kacskaringós';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Áthúzott';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Aláhúzás';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -8850,6 +9585,34 @@ class SfLocalizationsHy extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'-ից';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'ՄԱՍՆԱԼ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Քո ստորագրությունը նկարիր';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Գրչի գույնը';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ՊԱՀՊԱՆԵԼ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Պատճենել';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Ընդգծել';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Կռկռոց';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Strikethrough';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Ընդգծի՛ր';
 
   @override
   String get rabi1Label => r'Ռաբի ալ-ավալ';
@@ -9172,6 +9935,34 @@ class SfLocalizationsId extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'dari';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'JERNIH';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Gambar tanda tangan Anda';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Warna Pena';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'MENYIMPAN';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Menyalin';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Menyorot';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Berlekuk-lekuk';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Dicoret';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Menggarisbawahi';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awal';
 
   @override
@@ -9488,6 +10279,34 @@ class SfLocalizationsIs extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'af';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'Hreinsa';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Teiknaðu undirskriftina þína';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Pennalitur';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SPARA';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Afrita';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Hápunktur';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Skuggi';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Strykið í gegn';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Undirstrika';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -9810,6 +10629,33 @@ class SfLocalizationsIt extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'di';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'CHIARO';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Disegna la tua firma';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Colore penna';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SALVA';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'copia';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Evidenziare';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Ondulato';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Barrato';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Sottolineare';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -10127,10 +10973,37 @@ class SfLocalizationsJa extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'の';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'クリア';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'サインを描いてください';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'ペンの色';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'保存';
+
+  @override
   String get rabi1Label => r'ラビアルアワル';
 
   @override
   String get rabi2Label => r'ラビアルタニ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'コピー';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'ハイライト';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'波打つ';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'取り消し線';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'下線';
 
   @override
   String get rajabLabel => r'ラジャブ';
@@ -10440,6 +11313,33 @@ class SfLocalizationsKa extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'დან';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'გასუფთავება';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'დახატე შენი ხელმოწერა';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'კალმის ფერი';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ᲒᲐᲓᲐᲠᲩᲔᲜᲐ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'კოპირება';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'მონიშნეთ';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'ცბიერად';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'დარტყმა';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'ხაზი გაუსვით';
 
   @override
   String get rabi1Label => r'რაბი ალ-ავვალი';
@@ -10760,6 +11660,33 @@ class SfLocalizationsKk extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'ның';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ТАЗАЛАУ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Қолтаңбаңызды сызыңыз';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Қалам түсі';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'САҚТАУ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Көшіру';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Бөлектеу';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Айналмалы';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Сызық';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Астын сызу';
+
+  @override
   String get rabi1Label => r'Раби' "'" r' әл-әууәл';
 
   @override
@@ -11078,6 +12005,33 @@ class SfLocalizationsKm extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'នៃ';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'ជម្រះ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'គូរហត្ថលេខារបស់អ្នក។';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'ពណ៌ប៊ិច';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'រក្សាទុក';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'ចម្លង';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'បន្លិច';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'ញាក់សាច់';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'ការវាយឆ្មក់';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'គូសបន្ទាត់ពីក្រោម';
 
   @override
   String get rabi1Label => r'រ៉ាប៊ី អាល់ អាវ៉ាល់';
@@ -11459,6 +12413,42 @@ class SfLocalizationsKn extends SfGlobalLocalizations {
       '\u{cb0}\u{cac}\u{cbf}\u{20}\u{c85}\u{cb2}\u{ccd}\u{2d}\u{ca5}\u{cbe}\u{ca8}\u{cbf}';
 
   @override
+  String get pdfSignaturePadDialogClearLabel =>
+      '\u{cb8}\u{ccd}\u{caa}\u{cb7}\u{ccd}\u{c9f}';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      '\u{ca8}\u{cbf}\u{cae}\u{ccd}\u{cae}\u{20}\u{cb8}\u{cb9}\u{cbf}\u{caf}\u{ca8}\u{ccd}\u{ca8}\u{cc1}\u{20}\u{c8e}\u{cb3}\u{cc6}\u{caf}\u{cbf}\u{cb0}\u{cbf}';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel =>
+      '\u{caa}\u{cc6}\u{ca8}\u{ccd}\u{20}\u{cac}\u{ca3}\u{ccd}\u{ca3}';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel =>
+      '\u{c89}\u{cb3}\u{cbf}\u{cb8}\u{cbf}';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel =>
+      '\u{ca8}\u{c95}\u{cb2}\u{cc1}\u{20}\u{cae}\u{cbe}\u{ca1}\u{cbf}';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel =>
+      '\u{cb9}\u{cc8}\u{cb2}\u{cc8}\u{c9f}\u{ccd}';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel =>
+      '\u{cb8}\u{ccd}\u{c95}\u{ccd}\u{cb5}\u{cbf}\u{c97}\u{ccd}\u{cb2}\u{cbf}';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel =>
+      '\u{cb8}\u{ccd}\u{c9f}\u{ccd}\u{cb0}\u{cc8}\u{c95}\u{ccd}\u{ca5}\u{ccd}\u{cb0}\u{cc2}';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel =>
+      '\u{c85}\u{c82}\u{ca1}\u{cb0}\u{ccd}\u{cb2}\u{cc8}\u{ca8}\u{ccd}';
+
+  @override
   String get rajabLabel => '\u{cb0}\u{c9c}\u{cac}\u{ccd}';
 
   @override
@@ -11781,6 +12771,33 @@ class SfLocalizationsKo extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'의';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'분명한';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'서명하기';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'펜 색상';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'구하다';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'복사';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'가장 밝은 부분';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'구불구불한';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'취소선';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'밑줄';
+
+  @override
   String get rabi1Label => r'라비 알-아왈';
 
   @override
@@ -12093,6 +13110,33 @@ class SfLocalizationsKy extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'нын';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'CLEAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Колуңузду тартыңыз';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Калем түсү';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'САКТОО';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Көчүрүү';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Баса белгилөө';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Чийүү';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Астын сыз';
 
   @override
   String get rabi1Label => r'Рабиъ аль-аввал';
@@ -12415,6 +13459,33 @@ class SfLocalizationsLo extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'ຂອງ';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ອະນາໄມ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'ແຕ້ມລາຍເຊັນຂອງເຈົ້າ';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'ສີປາກກາ';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ບັນທຶກ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'ສຳເນົາ';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'ຈຸດເດັ່ນ';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'ຂີ້ຄ້ານ';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'ບຸກທະລຸ';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'ຂີດ​ກ້ອງ';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -12731,6 +13802,33 @@ class SfLocalizationsLt extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'apie';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'IŠVALYTI';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Nupiešk savo parašą';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Rašiklio spalva';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SUTAUPYTI';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopijuoti';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Paryškinti';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'raibulis';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Perbraukta';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Pabraukite';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -13050,6 +14148,34 @@ class SfLocalizationsLv extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'no';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'DZĪRS';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Uzzīmējiet savu parakstu';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Pildspalvas krāsa';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SAGLABĀT';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopēt';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Izcelt';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Svītrains';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Pārsvītrots';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Pasvītrot';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -13373,6 +14499,34 @@ class SfLocalizationsMk extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'на';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ЈАСНО';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Нацртајте го вашиот потпис';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Боја на пенкало';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ЗАЧУВАЈ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Копирај';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Истакнете';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Скигливо';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Премин';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Подвлечете';
+
+  @override
   String get rabi1Label => r'Раби ал-аввал';
 
   @override
@@ -13694,6 +14848,34 @@ class SfLocalizationsMl extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'യുടെ';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ക്ലിയർ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'നിങ്ങളുടെ ഒപ്പ് വരയ്ക്കുക';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'പേന നിറം';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'രക്ഷിക്കും';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'പകർത്തുക';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'ഹൈലൈറ്റ് ചെയ്യുക';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'സ്ക്വിഗ്ലി';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'സ്ട്രൈക്ക്ത്രൂ';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'അടിവരയിടുക';
+
+  @override
   String get rabi1Label => r'റബീഉൽ അവ്വൽ';
 
   @override
@@ -14013,6 +15195,33 @@ class SfLocalizationsMn extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'-ийн';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ЦЭВЭРЛЭХ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Гарын үсгээ зур';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Үзэгний өнгө';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ХАДГАЛАХ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Хуулах';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Онцлох';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Муухай';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Зураас';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Доогуур зур';
+
+  @override
   String get rabi1Label => r'Раби' "'" r' аль-аввал';
 
   @override
@@ -14330,6 +15539,33 @@ class SfLocalizationsMr extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'च्या';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'साफ करा';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'तुमची स्वाक्षरी काढा';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'पेन रंग';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'जतन करा';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'कॉपी करा';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'हायलाइट करा';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'स्क्विग्ली';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'स्ट्राइकथ्रू';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'अधोरेखित करा';
 
   @override
   String get rabi1Label => r'रबी अल अव्वल';
@@ -14654,6 +15890,33 @@ class SfLocalizationsMs extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'daripada';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'JELAS';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Lukis tandatangan anda';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Warna Pen';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'JIMAT';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Salinan';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Serlahkan';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Dengan berlekuk-lekuk';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Strikethrough';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Garis bawah';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -14976,6 +16239,33 @@ class SfLocalizationsMy extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'၏';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ရှင်းလင်းသော';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'သင်၏လက်မှတ်ကိုဆွဲပါ။';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'ဘောပင်အရောင်';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'သိမ်းဆည်းပါ။';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'ကော်ပီ';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'အသားပေး';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'ဖျတ်ခနဲ';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'ထိုးနှက်ချက်';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'မျဉ်းသား';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -15293,6 +16583,33 @@ class SfLocalizationsNb extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'av';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'KLAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Tegn signaturen din';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Pennefarge';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'LAGRE';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopiere';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Fremheve';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Snurrete';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Gjennomstreking';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Understrek';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -15615,6 +16932,34 @@ class SfLocalizationsNe extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'को';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'खाली गर्नुहोस्';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'आफ्नो हस्ताक्षर कोर्नुहोस्';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'कलम रंग';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'बचत गर्नुहोस्';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'कापी';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'हाइलाइट गर्नुहोस्';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'चकचके';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'स्ट्राइकथ्रु';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'अन्डरलाइन';
+
+  @override
   String get rabi1Label => r'रबि अल अव्वल';
 
   @override
@@ -15935,10 +17280,37 @@ class SfLocalizationsNl extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'van';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'DUIDELIJK';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Teken je handtekening';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Pen Kleur';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'REDDEN';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-Awwal';
 
   @override
   String get rabi2Label => r'Rabi' "'" r' al-thani';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopiëren';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Hoogtepunt';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Kronkelig';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Doorhalen';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Onderstrepen';
 
   @override
   String get rajabLabel => r'Rajab';
@@ -16252,6 +17624,33 @@ class SfLocalizationsNo extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'av';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'KLAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Tegn signaturen din';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Pennefarge';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'LAGRE';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopiere';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Fremheve';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Snurrete';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Gjennomstreking';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Understrek';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -16576,6 +17975,33 @@ class SfLocalizationsOr extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'ର';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ସଫା କର |';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'ତୁମର ଦସ୍ତଖତ ଅଙ୍କନ କର |';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'କଲମ ରଙ୍ଗ |';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ସଞ୍ଚୟ କରନ୍ତୁ |';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'କପି କରନ୍ତୁ |';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'ହାଇଲାଇଟ୍ କରନ୍ତୁ |';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'ସ୍କ୍ୱିଗ୍ଲି |';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'ଷ୍ଟ୍ରାଇକଥ୍ରୁ |';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'ଅଣ୍ଡରଲାଇନ୍ |';
+
+  @override
   String get rabi1Label => r'ରବି ' "'" r'ଅଲ-ଅୱାଲ୍ |';
 
   @override
@@ -16897,6 +18323,33 @@ class SfLocalizationsPa extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'ਦੇ';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ਸਾਫ਼';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'ਆਪਣੇ ਦਸਤਖਤ ਖਿੱਚੋ';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'ਪੈੱਨ ਦਾ ਰੰਗ';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ਸੇਵ ਕਰੋ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'ਕਾਪੀ ਕਰੋ';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'ਹਾਈਲਾਈਟ ਕਰੋ';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'ਸਟ੍ਰਾਈਕਥਰੂ';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'ਰੇਖਾਂਕਿਤ ਕਰੋ';
+
+  @override
   String get rabi1Label => r'ਰਬੀ ਅਲ-ਅੱਵਲ';
 
   @override
@@ -17215,6 +18668,18 @@ class SfLocalizationsPl extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'z';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'JASNE';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Narysuj swój podpis';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Kolor pióra';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'RATOWAĆ';
+
+  @override
   String get rabi1Label => r'Rabi al-awwal';
 
   @override
@@ -17222,6 +18687,21 @@ class SfLocalizationsPl extends SfGlobalLocalizations {
 
   @override
   String get rajabLabel => r'Radżab';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopiuj';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Atrakcja';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Faliste';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Przekreślenie';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Podkreślać';
 
   @override
   String get ramadanLabel => r'Ramadan';
@@ -17533,6 +19013,33 @@ class SfLocalizationsPs extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'د';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'روښانه';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'خپل لاسلیک رسم کړئ';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'د قلم رنګ';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'خوندي کړئ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'کاپي';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'روښانه کول';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'په خندا سره';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'اعتصاب';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'لاندې';
 
   @override
   String get rabi1Label => r'ربیع الاول';
@@ -17852,6 +19359,33 @@ class SfLocalizationsPt extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'do';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'CLARO';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Desenhe sua assinatura';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Cor da caneta';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SALVAR';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'cópia de';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Destaque';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Ondulado';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Tachado';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Sublinhado';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -18187,6 +19721,33 @@ class SfLocalizationsRo extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'de';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'CLAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Desenează-ți semnătura';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Culoare stilou';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SALVA';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Copie';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'A evidentia';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Striat';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Subliniați';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -18504,6 +20065,33 @@ class SfLocalizationsRu extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'из';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'ПРОЗРАЧНЫЙ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Нарисуй свою подпись';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Цвет пера';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'СОХРАНЯТЬ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Копировать';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Выделять';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Волнистый';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Зачеркивание';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Подчеркнуть';
 
   @override
   String get rabi1Label => r'Раби аль-авваль';
@@ -18825,6 +20413,33 @@ class SfLocalizationsSi extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'වල';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'පැහැදිලිව';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'ඔබේ අත්සන අඳින්න';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'පෑන වර්ණය';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'සුරකින්න';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'පිටපත් කරන්න';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'ඉස්මතු කරන්න';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'පහර හරහා';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'යටින් ඉරි';
+
+  @override
   String get rabi1Label => r'රබී අල්-අව්වල්';
 
   @override
@@ -19143,6 +20758,33 @@ class SfLocalizationsSk extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'z';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'JASNÝ';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Nakreslite svoj podpis';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Farba pera';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ULOŽIŤ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopírovať';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Zlatý klinec';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Prečiarknuté';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Zdôrazniť';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -19459,6 +21101,33 @@ class SfLocalizationsSl extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'od';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'ČISTO';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Nariši svoj podpis';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Barva peresa';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SHRANI';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopirati';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Označite';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Vijugasto';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Prečrtano';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Podčrtaj';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -19782,6 +21451,34 @@ class SfLocalizationsSq extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'e';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'QARTË';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'Vizatoni nënshkrimin tuaj';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Ngjyra e stilolapsit';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'RUAJ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopjo';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Theksoj';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Kërcitshëm';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Strikethrough';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Nënvizoni';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r'ul-evvel';
 
   @override
@@ -20100,6 +21797,33 @@ class SfLocalizationsSr extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'оф';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'ЈАСНО';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Нацртајте свој потпис';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Пен Цолор';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'САЧУВАТИ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Копирај';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Истакните';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Скуиггли';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Прецртано';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Подвући';
 
   @override
   String get rabi1Label => r'Раби' "'" r' ал-аввал';
@@ -20432,6 +22156,33 @@ class SfLocalizationsSv extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'av';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'KLAR';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Rita din signatur';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Färg på pennan';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SPARA';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopiera';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Markera';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Snyggt';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Genomstruken';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Understrykning';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -20749,6 +22500,33 @@ class SfLocalizationsSw extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'ya';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'WAZI';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Chora saini yako';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Rangi ya kalamu';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'HIFADHI';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Nakili';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Kuonyesha';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Kwa mbwembwe';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Mgomo';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Piga mstari';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -21070,6 +22848,34 @@ class SfLocalizationsTa extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'இன்';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'தெளிவு';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel =>
+      r'உங்கள் கையொப்பத்தை வரையவும்';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'பேனா நிறம்';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'சேமிக்கவும்';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'நகலெடுக்கவும்';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'முன்னிலைப்படுத்த';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'ஸ்க்விக்லி';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'வேலைநிறுத்தம்';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'அடிக்கோடு';
 
   @override
   String get rabi1Label => r'ரபி அல் அவ்வல்';
@@ -21396,6 +23202,33 @@ class SfLocalizationsTe extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'యొక్క';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'క్లియర్';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'మీ సంతకాన్ని గీయండి';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'పెన్ రంగు';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'సేవ్ చేయండి';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'కాపీ చేయండి';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'హైలైట్ చేయండి';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'స్క్విగ్లీ';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'స్ట్రైక్‌త్రూ';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'అండర్లైన్';
+
+  @override
   String get rabi1Label => r'రబీ అల్-అవ్వల్';
 
   @override
@@ -21717,6 +23550,18 @@ class SfLocalizationsTh extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'ของ';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ชัดเจน';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'วาดลายเซ็นของคุณ';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'ปากกาสี';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'บันทึก';
+
+  @override
   String get rabi1Label => r'รอบิอัลเอาวัล';
 
   @override
@@ -21727,6 +23572,21 @@ class SfLocalizationsTh extends SfGlobalLocalizations {
 
   @override
   String get ramadanLabel => r'เดือนรอมฎอน';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'สำเนา';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'ไฮไลท์';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'ไก่เขี่ย';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'ขีดทับ';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'ขีดเส้นใต้';
 
   @override
   String get rowsPerPageDataPagerLabel => r'แถวต่อหน้า';
@@ -22036,6 +23896,33 @@ class SfLocalizationsTl extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'ng';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'MALINAW';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Iguhit ang iyong lagda';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Kulay ng Panulat';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'MAGTIPID';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopya';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'I-highlight';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Nakapikit';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Strikethrough';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Salungguhit';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
@@ -22362,6 +24249,33 @@ class SfLocalizationsTr extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'nın-nin';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'TEMİZLEMEK';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'imzanı çiz';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Kalem Rengi';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'KAYDETMEK';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopyala';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Vurgulamak';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Dalgalı';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Üstü çizili';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Altını çizmek';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r'ul-evvel';
 
   @override
@@ -22683,6 +24597,33 @@ class SfLocalizationsUk extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'з';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'ЯСНО';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Намалюйте свій підпис';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Колір пера';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'ЗБЕРЕГТИ';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Копія';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Виділіть';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'звивистий';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Закреслення';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Підкреслити';
+
+  @override
   String get rabi1Label => r'Рабі аль-авваль';
 
   @override
@@ -23002,6 +24943,33 @@ class SfLocalizationsUr extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'کی';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'صاف کریں۔';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'اپنے دستخط کھینچیں۔';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'قلم کا رنگ';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'محفوظ کریں۔';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'کاپی';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'نمایاں کریں۔';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'دھڑلے سے';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'سٹرائیک تھرو';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'انڈر لائن';
+
+  @override
   String get rabi1Label => r'ربیع الاول';
 
   @override
@@ -23318,6 +25286,33 @@ class SfLocalizationsUz extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'ning';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'TOZLASH';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Imzongizni chizing';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Qalam rangi';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'SAQLASH';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Nusxalash';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Ajratish';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Buzg' "'" r'unchi';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Chizilgan';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'tagiga chizish';
 
   @override
   String get rabi1Label => r'Rabi' "'" r'ul-avval';
@@ -23639,6 +25634,33 @@ class SfLocalizationsVi extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'của';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'THÔNG THOÁNG';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Vẽ chữ ký của bạn';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'màu bút';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'CỨU';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Sao chép';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Điểm nổi bật';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'nguệch ngoạc';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'Gạch ngang';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'gạch chân';
+
+  @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';
 
   @override
@@ -23956,7 +25978,34 @@ class SfLocalizationsZh extends SfGlobalLocalizations {
   String get pdfScrollStatusOfLabel => r'的';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'清除';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'画出你的签名';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'笔颜色';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'节省';
+
+  @override
   String get rabi1Label => r'拉比·奥瓦尔';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'复制';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'强调';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'波浪形';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'删除线';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'强调';
 
   @override
   String get rabi2Label => r'拉比阿勒萨尼';
@@ -24207,7 +26256,34 @@ class SfLocalizationsZhHant extends SfLocalizationsZh {
   String get pdfPasswordDialogOpenLabel => r'打開';
 
   @override
+  String get pdfSignaturePadDialogClearLabel => r'清除';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'畫出你的簽名';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'筆顏色';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'節省';
+
+  @override
   String get rabi1Label => r'拉比·奧瓦爾';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'複製';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'強調';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'彎彎曲曲';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'刪除線';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'強調';
 
   @override
   String get rabi2Label => r'拉比阿勒薩尼';
@@ -24500,6 +26576,33 @@ class SfLocalizationsZu extends SfGlobalLocalizations {
 
   @override
   String get pdfScrollStatusOfLabel => r'kwe';
+
+  @override
+  String get pdfSignaturePadDialogClearLabel => r'SOLULE';
+
+  @override
+  String get pdfSignaturePadDialogHeaderTextLabel => r'Dweba isiginesha yakho';
+
+  @override
+  String get pdfSignaturePadDialogPenColorLabel => r'Umbala Wepeni';
+
+  @override
+  String get pdfSignaturePadDialogSaveLabel => r'GCINA';
+
+  @override
+  String get pdfTextSelectionMenuCopyLabel => r'Kopisha';
+
+  @override
+  String get pdfTextSelectionMenuHighlightLabel => r'Gqamisa';
+
+  @override
+  String get pdfTextSelectionMenuSquigglyLabel => r'Squiggly';
+
+  @override
+  String get pdfTextSelectionMenuStrikethroughLabel => r'I-Strikethrough';
+
+  @override
+  String get pdfTextSelectionMenuUnderlineLabel => r'Dwebela';
 
   @override
   String get rabi1Label => r'Rabi' "'" r' al-awwal';

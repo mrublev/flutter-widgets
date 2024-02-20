@@ -1,5 +1,105 @@
 ## Unreleased
 
+**Bugs**
+
+* Now, the `SfPdfViewer` will be properly deployed without namespace errors when built with a Gradle version greater than 8.x.
+
+**Features**
+
+* Provided support to add, remove, modify, and save text markup annotations in PDF files. The available text markups are highlight, underline, strikethrough, and squiggly.
+* Provided support to scroll vertically in single-page layout mode.
+
+## [23.2.6] - 11/28/2023 
+
+**Bugs**
+
+* Now, the `SfPdfViewer` will render the PDF pages considering the crop box value in iOS.
+* Now, the position is maintained in the zoomed document when performing panning in `SfPdfViewer`.
+* Now, the focus of the text form field is maintained when scrolling is performed in `SfPdfViewer`.
+
+**Features**
+
+* Enhanced the user experience of the scroll head by increasing its size in `SfPdfViewer`.
+
+## [23.2.4] - 11/20/2023
+
+**Bugs**
+
+* Now, the `SfPdfViewer` will trigger the `onTap` callback when there is a slight touch slop too.
+
+## [23.1.44] - 11/07/2023
+
+**Bugs**
+
+* Now, the `SfPdfViewer` does not trigger the `onTap` callback when performing a double-tap zoom.
+* Now, in the single-page layout mode, the page position is maintained properly in landscape orientation when performing zoom in a specific PDF document.
+
+**Features**
+
+* Support to render the background color in the form fields has been provided.
+
+## [23.1.42] - 10/24/2023
+
+**Bugs**
+
+* Now, the form fields are properly rendered in a document with a different page size in `SfPdfViewer`.
+
+**Features**
+
+* Provided support to render **digital signatures** in existing PDF documents in a non-interactive way to avoid data loss while viewing. The document's integrity is preserved if no editing operation is performed.
+
+## [23.1.40] - 10/10/2023
+
+**Bugs**
+
+* Now, the default selection of the first item in the radio button form fields has been removed.
+
+**Features**
+
+* Provided the support to restrict the text form field editing based on its maximum length.
+
+## [23.1.38] - 09/26/2023
+
+**Bugs**
+
+* Now, the PDF page content will be clear on iOS when zoomed in.
+
+**Features**
+
+* Provided support for the `continueImportOnError` option in the `importFormData` method.
+
+## [23.1.36] - 09/15/2023
+
+**Bugs**
+
+* Now, the `pagePosition` property in `PdfGestureDetails` will return the tapped position in the PDF page coordinates.
+
+## [22.2.10] - 08/22/2023
+
+**Bugs**
+
+* Now, the `AlertDialog` or `DatePicker` dialog is properly closed when invoked in the `onFormFieldFocusChange` callback.
+
+**Features**
+
+* Enhanced the user experience of the combo box form field by switching the `PopupMenuButton` with a `DropdownButton` widget in `SfPdfViewer`.
+* Support for localization for the texts in the built-in signature pad dialog has been provided.
+
+## [22.2.5] - 07/27/2023
+
+**Bugs**
+
+* The multi-line text form fields will now have the proper font size.
+
+**Features**
+
+* Support for filling out the list box form field has been provided.
+* Support for filling or editing form fields programmatically has been provided.
+* Provided focus change and value change callback support for form fields.
+* Provided the support for the `onTap` callback to retrieve the page number, position, and page position when tapping on the `SfPdfViewer`.
+
+## [22.1.34] - 06/21/2023
+
 **Features**
 
 * Support for filling out the form fields, such as text boxes, dropdown menus, checkboxes, radio buttons, and signatures, has been provided. It also offers additional features, such as the ability to save, export, and import the form data.
