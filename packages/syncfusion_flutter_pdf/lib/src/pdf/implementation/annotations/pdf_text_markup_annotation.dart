@@ -455,7 +455,8 @@ class PdfTextMarkupAnnotationHelper extends PdfAnnotationHelper {
         }
       }
       final PdfTemplate template = PdfTemplate(width, height);
-      setMatrix(PdfTemplateHelper.getHelper(template).content);
+      PdfAnnotationHelper.setMatrixToZeroRotation(
+          PdfTemplateHelper.getHelper(template).content);
       final PdfGraphics graphics = template.graphics!;
       graphics.setTransparency(opacity, mode: PdfBlendMode.multiply);
       if (boundsCollection.length > 1) {
@@ -560,10 +561,11 @@ class PdfTextMarkupAnnotationHelper extends PdfAnnotationHelper {
     for (int i = 0; i < mPathPoints.length; i++, x += length) {
       mPathPoints[i] =
           Offset(x, ((height - location) + zigZag) - (height * 0.02));
-      if (zigZag == 0)
+      if (zigZag == 0) {
         zigZag = location;
-      else
+      } else {
         zigZag = 0;
+      }
     }
     PdfPathHelper.getHelper(path).addLines(mPathPoints);
     return path;

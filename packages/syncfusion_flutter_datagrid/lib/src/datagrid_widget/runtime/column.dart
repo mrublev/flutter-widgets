@@ -13,6 +13,7 @@ import '../../grid_common/visible_line_info.dart';
 import '../helper/callbackargs.dart';
 import '../helper/datagrid_configuration.dart';
 import '../helper/datagrid_helper.dart' as grid_helper;
+import '../helper/datagrid_helper.dart';
 import '../helper/enums.dart';
 import '../sfdatagrid.dart';
 import 'generator.dart';
@@ -373,8 +374,7 @@ class ColumnSizer {
 
     // Set width based on Column.Width
     final List<GridColumn> widthColumns = dataGridConfiguration.columns
-        .skipWhile((GridColumn column) => !column.visible)
-        .where((GridColumn column) => !column.width.isNaN)
+        .where((GridColumn column) => column.visible && !column.width.isNaN)
         .toList();
     for (final GridColumn column in widthColumns) {
       totalColumnSize +=
@@ -384,8 +384,8 @@ class ColumnSizer {
 
     // Set width based on fitByCellValue mode
     final List<GridColumn> fitByCellValueColumns = dataGridConfiguration.columns
-        .skipWhile((GridColumn column) => !column.visible)
         .where((GridColumn column) =>
+            column.visible &&
             column.columnWidthMode == ColumnWidthMode.fitByCellValue &&
             column.width.isNaN)
         .toList();
@@ -405,8 +405,8 @@ class ColumnSizer {
     // Set width based on fitByColumnName mode
     final List<GridColumn> fitByColumnNameColumns = dataGridConfiguration
         .columns
-        .skipWhile((GridColumn column) => !column.visible)
         .where((GridColumn column) =>
+            column.visible &&
             column.columnWidthMode == ColumnWidthMode.fitByColumnName &&
             column.width.isNaN)
         .toList();
@@ -428,9 +428,8 @@ class ColumnSizer {
         dataGridConfiguration.shrinkWrapColumns
             ? <GridColumn>[]
             : dataGridConfiguration.columns
-                .skipWhile(
-                    (GridColumn column) => calculatedColumns.contains(column))
                 .where((GridColumn col) =>
+                    !calculatedColumns.contains(col) &&
                     col.columnWidthMode == ColumnWidthMode.lastColumnFill &&
                     !_isLastFillColum(col))
                 .toList();
@@ -654,6 +653,9 @@ class ColumnSizer {
             dataGridConfiguration, visibleLines.lastBodyVisibleIndex);
         break;
     }
+    if (startRowIndex <= 0 && endRowIndex <= 0) {
+      return column._actualWidth;
+    }
 
     for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
       autoFitWidth = max(_getCellWidth(column, rowIndex), autoFitWidth);
@@ -856,12 +858,13 @@ class ColumnSizer {
     final DataGridConfiguration dataGridConfiguration =
         _dataGridStateDetails!();
     final int columnIndex = dataGridConfiguration.columns.indexOf(column);
+    final int index = grid_helper.resolveToScrollColumnIndex(
+        dataGridConfiguration, columnIndex);
     if (column.width < column._actualWidth) {
       return columnWidth;
     }
 
-    final double width =
-        dataGridConfiguration.container.columnWidths[columnIndex];
+    final double width = dataGridConfiguration.container.columnWidths[index];
     return _checkWidthConstraints(column, columnWidth, width);
   }
 
@@ -1014,7 +1017,8 @@ class ColumnSizer {
         column,
         grid_helper.getHeaderIndex(_dataGridStateDetails!()),
         column.columnName,
-        textStyle);
+        textStyle,
+        isHeaderCell: true);
   }
 
   /// Calculates the height of the cell based on the [DataGridCell.value].
@@ -1056,7 +1060,10 @@ class ColumnSizer {
     double autoFitHeight = 0.0;
     if (dataGridConfiguration.stackedHeaderRows.isNotEmpty &&
         rowIndex <= dataGridConfiguration.stackedHeaderRows.length - 1) {
-      return dataGridConfiguration.headerRowHeight;
+      // We did not provide support to automatically calculate the height of a
+      // stacked header based on the content.
+      // So we have returned the default header row height .
+      return 56.0;
     }
     if (grid_helper.isFooterWidgetRow(rowIndex, dataGridConfiguration)) {
       return dataGridConfiguration.footerHeight;
@@ -1106,10 +1113,12 @@ class ColumnSizer {
   }
 
   double _measureCellHeight(
-      GridColumn column, int rowIndex, Object? cellValue, TextStyle textStyle) {
+      GridColumn column, int rowIndex, Object? cellValue, TextStyle textStyle,
+      {bool isHeaderCell = false}) {
     final DataGridConfiguration dataGridConfiguration =
         _dataGridStateDetails!();
-    final int columnIndex = dataGridConfiguration.columns.indexOf(column);
+    final int columnIndex = resolveToScrollColumnIndex(
+        dataGridConfiguration, dataGridConfiguration.columns.indexOf(column));
     double columnWidth = !column.visible || column.width == 0.0
         ? dataGridConfiguration.defaultColumnWidth
         : dataGridConfiguration.container.columnWidths[columnIndex];
@@ -1122,14 +1131,16 @@ class ColumnSizer {
 
     final double horizontalPadding = column.autoFitPadding.horizontal;
 
-    // Removed the padding and gridline stroke width from the column width to
-    // measure the accurate height for the cell content.
-    double iconsWidth = _getSortIconWidth(column) + _getFilterIconWidth(column);
-
-    if (iconsWidth > 0) {
-      iconsWidth += iconsOuterPadding.horizontal;
+    double iconsWidth = 0.0;
+    if (isHeaderCell) {
+      iconsWidth = _getSortIconWidth(column) + _getFilterIconWidth(column);
+      if (iconsWidth > 0) {
+        iconsWidth += iconsOuterPadding.horizontal;
+      }
     }
 
+    // Removed the padding and gridline stroke width from the column width to
+    // measure the accurate height for the cell content.
     columnWidth -= iconsWidth + horizontalPadding + strokeWidth;
 
     return _calculateTextSize(
@@ -1148,15 +1159,13 @@ class ColumnSizer {
           fontFamily: 'Roboto',
           fontWeight: FontWeight.w500,
           fontSize: 14,
-          color:
-              dataGridConfiguration.colorScheme!.onSurface.withOpacity(0.87));
+          color: dataGridConfiguration.colorScheme!.onSurface[222]);
     } else {
       return TextStyle(
           fontFamily: 'Roboto',
           fontWeight: FontWeight.w400,
           fontSize: 14,
-          color:
-              dataGridConfiguration.colorScheme!.onSurface.withOpacity(0.87));
+          color: dataGridConfiguration.colorScheme!.onSurface[222]);
     }
   }
 
@@ -1165,7 +1174,7 @@ class ColumnSizer {
       required DataGridConfiguration dataGridConfiguration,
       required GridColumn column}) {
     final double strokeWidth =
-        dataGridConfiguration.dataGridThemeHelper!.gridLineStrokeWidth;
+        dataGridConfiguration.dataGridThemeHelper!.gridLineStrokeWidth!;
 
     final GridLinesVisibility gridLinesVisibility =
         rowIndex <= grid_helper.getHeaderIndex(dataGridConfiguration)
@@ -1358,12 +1367,15 @@ class ColumnResizeController {
 
       _resizingLine = _getResizingLine(dx, canAllowBuffer);
 
+      int startColumnIndex =
+          grid_helper.resolveToStartColumnIndex(dataGridConfiguration);
+      // Need to disable column resizing for the indent columns.
+      if (dataGridConfiguration.source.groupedColumns.isNotEmpty) {
+        startColumnIndex += dataGridConfiguration.source.groupedColumns.length;
+      }
+
       if (_resizingLine != null &&
-          _resizingLine!.lineIndex >=
-              grid_helper.resolveToStartColumnIndex(dataGridConfiguration) &&
-          (resizingDataCell?.cellType != CellType.indentCell &&
-              resizingDataCell!.columnIndex >
-                  dataGridConfiguration.source.groupedColumns.length)) {
+          _resizingLine!.lineIndex >= startColumnIndex) {
         // To ensure the resizing line for the stacked header row.
         if (dataGridConfiguration.stackedHeaderRows.isNotEmpty) {
           if (!_canAllowResizing(dx, resizingDataCell,
@@ -1594,7 +1606,7 @@ class ColumnResizeController {
     // To remove the half of stroke width to show the indicator to the
     // center of grid line.
     indicatorLeft -= dataGridConfiguration
-            .dataGridThemeHelper!.columnResizeIndicatorStrokeWidth /
+            .dataGridThemeHelper!.columnResizeIndicatorStrokeWidth! /
         2;
 
     return indicatorLeft;
@@ -1987,26 +1999,6 @@ class DataGridFilterHelper {
               .filterPopupTextStyle!
               .fontSize! +
           38;
-
-  /// Provides the icon color.
-  Color get iconColor =>
-      _dataGridStateDetails().colorScheme!.onSurface.withOpacity(0.6);
-
-  /// Provides the disable icon color.
-  Color get disableIconColor =>
-      _dataGridStateDetails().colorScheme!.onSurface.withOpacity(0.38);
-
-  /// Provides the border color.
-  Color get borderColor =>
-      _dataGridStateDetails().colorScheme!.onSurface.withOpacity(0.12);
-
-  /// Provides the background color.
-  Color get backgroundColor =>
-      _dataGridStateDetails().colorScheme!.onSurface.withOpacity(0.001);
-
-  /// Provides the text color.
-  Color get textColor =>
-      _dataGridStateDetails().colorScheme!.onSurface.withOpacity(0.89);
 
   /// Provides the primary color.
   Color get primaryColor => _dataGridStateDetails().colorScheme!.primary;

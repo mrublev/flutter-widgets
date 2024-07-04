@@ -40,6 +40,10 @@ export './src/charts/axis/multi_level_labels.dart'
         MultiLevelLabelStyle;
 export './src/charts/axis/numeric_axis.dart' hide RenderNumericAxis;
 export './src/charts/axis/plot_band.dart';
+export './src/charts/behaviors/crosshair.dart';
+export './src/charts/behaviors/trackball.dart'
+    show TrackballBehavior, TrackballMarkerSettings;
+export './src/charts/behaviors/zooming.dart';
 export './src/charts/cartesian_chart.dart';
 export './src/charts/circular_chart.dart';
 export './src/charts/common/chart_point.dart'
@@ -63,6 +67,8 @@ export './src/charts/indicators/macd_indicator.dart'
     hide MacdIndicatorRenderer, MacdIndicatorWidget;
 export './src/charts/indicators/momentum_indicator.dart'
     hide MomentumIndicatorRenderer, MomentumIndicatorWidget;
+export './src/charts/indicators/roc_indicator.dart'
+    hide RocIndicatorRenderer, RocIndicatorWidget;
 export './src/charts/indicators/rsi_indicator.dart'
     hide RsiIndicatorRenderer, RsiIndicatorWidget;
 export './src/charts/indicators/sma_indicator.dart'
@@ -73,6 +79,8 @@ export './src/charts/indicators/technical_indicator.dart'
     hide IndicatorRenderer, IndicatorWidget;
 export './src/charts/indicators/tma_indicator.dart'
     hide TmaIndicatorRenderer, TmaIndicatorWidget;
+export './src/charts/indicators/wma_indicator.dart'
+    hide WmaIndicatorRenderer, WmaIndicatorWidget;
 export './src/charts/pyramid_chart.dart';
 export './src/charts/series/area_series.dart';
 export './src/charts/series/bar_series.dart';
@@ -126,21 +134,10 @@ export './src/charts/utils/typedef.dart' hide PointToPixelCallback;
 export 'src/charts/common/annotation.dart';
 export 'src/charts/common/callbacks.dart' hide ErrorBarValues;
 export 'src/charts/common/title.dart';
-export 'src/charts/interactions/behavior.dart'
-    show ZoomPanBehavior, TrackballBehavior, CrosshairBehavior;
 //export user interaction
 export 'src/charts/interactions/selection.dart';
 export 'src/charts/interactions/tooltip.dart'
     hide ChartTooltipInfo, TrendlineTooltipInfo;
-export 'src/charts/interactions/trackball.dart'
-    hide
-        TrackballRenderObject,
-        TrackballInfo,
-        TrackballElement,
-        ChartLocation,
-        ChartTrackballInfo,
-        TooltipPositions,
-        ClosestPoints;
 export 'src/charts/trendline/trendline.dart'
     hide
         TrendlineWidget,

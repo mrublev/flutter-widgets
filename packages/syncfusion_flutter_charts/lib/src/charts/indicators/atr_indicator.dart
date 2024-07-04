@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../behaviors/trackball.dart';
 import '../common/callbacks.dart';
 import '../common/chart_point.dart';
-import '../interactions/trackball.dart';
 import '../series/chart_series.dart';
 import '../utils/enum.dart';
 import '../utils/helper.dart';
@@ -198,8 +198,7 @@ class AtrIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
   set period(int value) {
     if (_period != value) {
       _period = value;
-      populateDataSource();
-      markNeedsLayout();
+      markNeedsPopulateAndLayout();
     }
   }
 
@@ -239,10 +238,11 @@ class AtrIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
       }
     }
 
-    if (_highValues.isNotEmpty &&
+    _signalLineActualValues.clear();
+    if (signalLineWidth > 0 &&
+        _highValues.isNotEmpty &&
         _lowValues.isNotEmpty &&
         _closeValues.isNotEmpty) {
-      _signalLineActualValues.clear();
       _calculateSignalLineValues();
     }
 
@@ -250,6 +250,8 @@ class AtrIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
   }
 
   void _calculateSignalLineValues() {
+    num xMinimum = double.infinity;
+    num xMaximum = double.negativeInfinity;
     num yMinimum = double.infinity;
     num yMaximum = double.negativeInfinity;
 
@@ -259,7 +261,7 @@ class AtrIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
     num average = 0;
     num sum = 0;
     for (int i = 0; i < dataCount; i++) {
-      final num x = xValues[i];
+      final double x = xValues[i].toDouble();
       final num high = _highValues[i].isNaN ? 0 : _highValues[i];
       final num low = _lowValues[i].isNaN ? 0 : _lowValues[i];
       final num highLow = high - low;
@@ -282,24 +284,29 @@ class AtrIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
             period;
 
         final double y = average.toDouble();
+        xMinimum = min(xMinimum, x);
+        xMaximum = max(xMaximum, x);
         yMinimum = min(yMinimum, y);
         yMaximum = max(yMaximum, y);
-        _signalLineActualValues.add(Offset(x.toDouble(), y));
+        _signalLineActualValues.add(Offset(x, y));
       } else {
         average = sum / period;
         if (i == period - 1) {
           final double y = average.toDouble();
+          xMinimum = min(xMinimum, x);
+          xMaximum = max(xMaximum, x);
           yMinimum = min(yMinimum, y);
           yMaximum = max(yMaximum, y);
-          _signalLineActualValues.add(Offset(x.toDouble(), y));
+          _signalLineActualValues.add(Offset(x, y));
         }
       }
-      averageOffsetValues
-          .add(Offset(xValues[i].toDouble(), average.toDouble()));
+      averageOffsetValues.add(Offset(x, average.toDouble()));
     }
 
-    yMin = min(yMin, yMinimum);
-    yMax = max(yMax, yMaximum);
+    xMin = xMinimum.isInfinite ? xMin : xMinimum;
+    xMax = xMaximum.isInfinite ? xMax : xMaximum;
+    yMin = yMinimum.isInfinite ? yMin : yMinimum;
+    yMax = yMaximum.isInfinite ? yMax : yMaximum;
   }
 
   @override
@@ -340,6 +347,7 @@ class AtrIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
     final int nearestPointIndex = _findNearestPoint(signalLinePoints, position);
     if (nearestPointIndex != -1) {
       final CartesianChartPoint<D> chartPoint = _chartPoint(nearestPointIndex);
+      final String text = defaultLegendItemText();
       return <ChartTrackballInfo<T, D>>[
         ChartTrackballInfo<T, D>(
           position: signalLinePoints[nearestPointIndex],
@@ -347,8 +355,11 @@ class AtrIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
           series: this,
           pointIndex: nearestPointIndex,
           seriesIndex: index,
-          name: defaultLegendItemText(),
+          name: text,
+          header: tooltipHeaderText(chartPoint),
+          text: trackballText(chartPoint, text),
           color: signalLineColor,
+          segmentIndex: nearestPointIndex,
         )
       ];
     }
@@ -360,7 +371,8 @@ class AtrIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
     num? nearPointX;
     num? nearPointY;
     int? pointIndex;
-    for (int i = 0; i < points.length; i++) {
+    final int length = points.length;
+    for (int i = 0; i < length; i++) {
       nearPointX ??= points[0].dx;
       nearPointY ??= yAxis!.visibleRange!.minimum;
 
@@ -397,8 +409,7 @@ class AtrIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
     return CartesianChartPoint<D>(
       x: xRawValues[pointIndex + period - 1],
       xValue: xValues[pointIndex + period - 1],
-      y: yAxis!.pixelToPoint(yAxis!.paintBounds,
-          signalLinePoints[pointIndex].dx, signalLinePoints[pointIndex].dy),
+      y: _signalLineActualValues[pointIndex].dy,
     );
   }
 

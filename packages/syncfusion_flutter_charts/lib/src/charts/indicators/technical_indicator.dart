@@ -1,17 +1,20 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:syncfusion_flutter_core/core.dart';
 
 import '../axis/axis.dart';
+import '../axis/category_axis.dart';
+import '../axis/datetime_axis.dart';
+import '../axis/datetime_category_axis.dart';
+import '../axis/logarithmic_axis.dart';
+import '../axis/numeric_axis.dart';
 import '../base.dart';
+import '../behaviors/trackball.dart';
 import '../common/callbacks.dart';
 import '../common/chart_point.dart';
 import '../common/core_legend.dart';
 import '../common/legend.dart';
-import '../interactions/trackball.dart';
 import '../series/chart_series.dart';
 import '../utils/enum.dart';
 import '../utils/helper.dart';
@@ -661,7 +664,9 @@ abstract class IndicatorRenderer<T, D> extends RenderBox
   ChartLegendRenderCallback? onLegendItemRender;
   ChartIndicatorRenderCallback? onRenderDetailsUpdate;
 
-  final Paint _fillPaint = Paint()..isAntiAlias = true;
+  final Paint _fillPaint = Paint()
+    ..isAntiAlias = true
+    ..style = PaintingStyle.fill;
   final Paint _strokePaint = Paint()
     ..isAntiAlias = true
     ..style = PaintingStyle.stroke
@@ -672,6 +677,9 @@ abstract class IndicatorRenderer<T, D> extends RenderBox
 
   @override
   bool get sizedByParent => true;
+
+  @override
+  RenderIndicatorArea? get parent => super.parent as RenderIndicatorArea?;
 
   /// The [TickerProvider] for the [AnimationController] that
   /// runs the animation.
@@ -865,8 +873,15 @@ abstract class IndicatorRenderer<T, D> extends RenderBox
   @override
   void performUpdate() {
     if (parent != null && parent is RenderIndicatorArea) {
-      final RenderIndicatorArea parentBox = parent! as RenderIndicatorArea;
-      dependent = parentBox.series[seriesName];
+      dependent = parent!.series[seriesName];
+    }
+
+    markNeedsPopulateAndLayout();
+  }
+
+  void markNeedsPopulateAndLayout() {
+    if (xAxis == null || yAxis == null) {
+      return;
     }
 
     populateDataSource();
@@ -908,19 +923,8 @@ abstract class IndicatorRenderer<T, D> extends RenderBox
 
     xValues.clear();
     late num currentX;
-    num xMinimum = double.infinity;
-    num xMaximum = double.negativeInfinity;
-    num yMinimum = double.infinity;
-    num yMaximum = double.negativeInfinity;
+    final Function(int, D) preferredXValue = _preferredXValue();
     final Function(D? value, num x) addXValue = _addRawAndPreferredXValue;
-    Function(D, int) preferredValue;
-    if (D == DateTime) {
-      preferredValue = _valueFromDateTime;
-    } else if (D == String) {
-      preferredValue = _valueFromString;
-    } else {
-      preferredValue = _valueFromNum;
-    }
 
     for (int i = 0; i < length; i++) {
       final D? rawX = xPath(i);
@@ -928,38 +932,43 @@ abstract class IndicatorRenderer<T, D> extends RenderBox
         continue;
       }
 
-      currentX = preferredValue(rawX, i);
+      currentX = preferredXValue(i, rawX);
       addXValue(rawX, currentX);
-      xMinimum = min(xMinimum, currentX);
-      xMaximum = max(xMaximum, currentX);
       for (int j = 0; j < yPathLength; j++) {
         final ChartIndexedValueMapper<num?>? yPath = yPaths[j];
         if (yPath == null) {
           continue;
         }
 
-        final num? yValue = yPath(i);
-        yList[j]!.add(yValue ?? double.nan);
-        if (yValue != null) {
-          yMinimum = min(yMinimum, yValue);
-          yMaximum = max(yMaximum, yValue);
-        }
+        yList[j]!.add(yPath(i) ?? double.nan);
       }
     }
 
     dataCount = xValues.length;
   }
 
-  num _valueFromDateTime(D value, int index) {
+  Function(int, D) _preferredXValue() {
+    if (xAxis is RenderNumericAxis || xAxis is RenderLogarithmicAxis) {
+      return _valueAsNum;
+    } else if (xAxis is RenderDateTimeAxis) {
+      return _dateToMilliseconds;
+    } else if (xAxis is RenderCategoryAxis ||
+        xAxis is RenderDateTimeCategoryAxis) {
+      return _valueToIndex;
+    }
+    return _valueAsNum;
+  }
+
+  num _valueAsNum(int index, D value) {
+    return value as num;
+  }
+
+  num _dateToMilliseconds(int index, D value) {
     final DateTime date = value as DateTime;
     return date.millisecondsSinceEpoch;
   }
 
-  num _valueFromNum(D value, int index) {
-    return value as num;
-  }
-
-  num _valueFromString(D value, int index) {
+  num _valueToIndex(int index, D value) {
     return index;
   }
 
@@ -1063,7 +1072,7 @@ abstract class IndicatorRenderer<T, D> extends RenderBox
       return <LegendItem>[
         ChartLegendItem(
           text: legendItemText ?? name ?? defaultLegendItemText(),
-          iconType: effectiveLegendIconType(),
+          iconType: toLegendShapeMarkerType(legendIconType, this),
           iconColor: effectiveLegendIconColor(),
           iconBorderWidth: 2,
           seriesIndex: index,

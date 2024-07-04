@@ -2,10 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../behaviors/trackball.dart';
 import '../common/callbacks.dart';
 import '../common/chart_point.dart';
-import '../interactions/trackball.dart';
 import '../series/chart_series.dart';
+import '../utils/constants.dart';
 import '../utils/enum.dart';
 import '../utils/helper.dart';
 import '../utils/typedef.dart';
@@ -387,8 +388,8 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
   late List<double>? _dashArray;
 
   final List<Offset> _signalLineActualValues = <Offset>[];
-  final List<Offset> _lowerLineValues = <Offset>[];
-  final List<Offset> _upperLineValues = <Offset>[];
+  final List<Offset> _lowerLineActualValues = <Offset>[];
+  final List<Offset> _upperLineActualValues = <Offset>[];
   final List<Offset> _lowerLinePoints = <Offset>[];
   final List<Offset> _upperLinePoints = <Offset>[];
   final Path _upperLinePath = Path();
@@ -397,6 +398,11 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
   List<num> _highValues = <num>[];
   List<num> _lowValues = <num>[];
   List<num> _closeValues = <num>[];
+
+  num _xMinimum = double.infinity;
+  num _xMaximum = double.negativeInfinity;
+  num _yMinimum = double.infinity;
+  num _yMaximum = double.negativeInfinity;
 
   bool get showZones => _showZones;
   bool _showZones = true;
@@ -412,8 +418,7 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
   set overbought(double value) {
     if (_overbought != value) {
       _overbought = value;
-      populateDataSource();
-      markNeedsLayout();
+      markNeedsPopulateAndLayout();
     }
   }
 
@@ -422,8 +427,7 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
   set oversold(double value) {
     if (_oversold != value) {
       _oversold = value;
-      populateDataSource();
-      markNeedsLayout();
+      markNeedsPopulateAndLayout();
     }
   }
 
@@ -468,8 +472,7 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
   set period(int value) {
     if (_period != value) {
       _period = value;
-      populateDataSource();
-      markNeedsLayout();
+      markNeedsPopulateAndLayout();
     }
   }
 
@@ -510,42 +513,49 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
     }
 
     if (dataCount >= period && period > 0) {
-      _upperLineValues.clear();
-      _lowerLineValues.clear();
+      _upperLineActualValues.clear();
+      _lowerLineActualValues.clear();
       _signalLineActualValues.clear();
 
       _calculateZones();
       _calculateSignalLineValues();
     }
 
+    xMin = _xMinimum.isInfinite ? xMin : _xMinimum;
+    xMax = _xMaximum.isInfinite ? xMax : _xMaximum;
+    yMin = _yMinimum.isInfinite ? yMin : _yMinimum;
+    yMax = _yMaximum.isInfinite ? yMax : _yMaximum;
+
     populateChartPoints();
   }
 
   void _calculateZones() {
-    if (showZones) {
-      num yMinimum = double.infinity;
-      num yMaximum = double.negativeInfinity;
-      for (int i = 0; i < dataCount; i++) {
-        final double x = xValues[i].toDouble();
-        final double minY = min(overbought, oversold);
-        final double maxY = max(overbought, oversold);
-        yMinimum = min(yMinimum, minY);
-        yMaximum = max(yMaximum, maxY);
+    if (!showZones || (upperLineWidth <= 0 && lowerLineWidth <= 0)) {
+      return;
+    }
 
-        _upperLineValues.add(Offset(x, overbought));
-        _lowerLineValues.add(Offset(x, oversold));
+    for (int i = 0; i < dataCount; i++) {
+      final double x = xValues[i].toDouble();
+      if (upperLineWidth > 0) {
+        _upperLineActualValues.add(Offset(x, overbought));
       }
 
-      yMin = min(yMin, yMinimum);
-      yMax = max(yMax, yMaximum);
+      if (lowerLineWidth > 0) {
+        _lowerLineActualValues.add(Offset(x, oversold));
+      }
+
+      _xMinimum = min(_xMinimum, x);
+      _xMaximum = max(_xMaximum, x);
     }
+
+    _yMinimum = min(_yMinimum, min(overbought, oversold));
+    _yMaximum = max(_yMaximum, max(overbought, oversold));
   }
 
   void _calculateSignalLineValues() {
-    num xMinimum = double.infinity;
-    num xMaximum = double.negativeInfinity;
-    num yMinimum = double.infinity;
-    num yMaximum = double.negativeInfinity;
+    if (signalLineWidth <= 0 || _closeValues.isEmpty) {
+      return;
+    }
 
     num previousClose = _closeValues[0];
     if (previousClose.isNaN) {
@@ -573,10 +583,10 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
 
     final double x = xValues[period].toDouble();
     final double y = value.toDouble();
-    xMinimum = min(xMinimum, x);
-    xMaximum = max(xMaximum, x);
-    yMinimum = min(yMinimum, y);
-    yMaximum = max(yMaximum, y);
+    _xMinimum = min(_xMinimum, x);
+    _xMaximum = max(_xMaximum, x);
+    _yMinimum = min(_yMinimum, y);
+    _yMaximum = max(_yMaximum, y);
 
     _signalLineActualValues.add(Offset(x, y));
 
@@ -595,17 +605,15 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
       previousClose = currentClose;
       final num value = 100 - (100 / (1 + (gain / loss)));
 
+      final double x = xValues[j].toDouble();
       final double y = value.toDouble();
-      yMinimum = min(yMinimum, y);
-      yMaximum = max(yMaximum, y);
+      _xMinimum = min(_xMinimum, x);
+      _xMaximum = max(_xMaximum, x);
+      _yMinimum = min(_yMinimum, y);
+      _yMaximum = max(_yMaximum, y);
 
-      _signalLineActualValues.add(Offset(xValues[j].toDouble(), y));
+      _signalLineActualValues.add(Offset(x, y));
     }
-
-    xMin = min(xMin, xMinimum);
-    xMax = max(xMax, xMaximum);
-    yMin = min(yMin, yMinimum);
-    yMax = max(yMax, yMaximum);
   }
 
   @override
@@ -635,21 +643,21 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
     _lowerLinePoints.clear();
 
     if (showZones) {
-      if (_upperLineValues.isNotEmpty) {
-        final int length = _upperLineValues.length;
+      if (_upperLineActualValues.isNotEmpty) {
+        final int length = _upperLineActualValues.length;
         for (int i = 0; i < length; i++) {
-          final num x = _upperLineValues[i].dx;
-          final num y = _upperLineValues[i].dy;
+          final num x = _upperLineActualValues[i].dx;
+          final num y = _upperLineActualValues[i].dy;
           _upperLinePoints
               .add(Offset(pointToPixelX(x, y), pointToPixelY(x, y)));
         }
       }
 
-      if (_lowerLineValues.isNotEmpty) {
-        final int length = _lowerLineValues.length;
+      if (_lowerLineActualValues.isNotEmpty) {
+        final int length = _lowerLineActualValues.length;
         for (int i = 0; i < length; i++) {
-          final num x = _lowerLineValues[i].dx;
-          final num y = _lowerLineValues[i].dy;
+          final num x = _lowerLineActualValues[i].dx;
+          final num y = _lowerLineActualValues[i].dy;
           _lowerLinePoints
               .add(Offset(pointToPixelX(x, y), pointToPixelY(x, y)));
         }
@@ -672,16 +680,19 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
         <ChartTrackballInfo<T, D>>[];
     final int rsiPointIndex = _findNearestPoint(signalLinePoints, position);
     if (rsiPointIndex != -1) {
-      final CartesianChartPoint<D> rsiPointInfo =
-          _chartPoint(rsiPointIndex, 'rsi');
+      final CartesianChartPoint<D> rsiPoint = _chartPoint(rsiPointIndex, 'rsi');
+      final String rsiText = defaultLegendItemText();
       trackballInfo.add(
         ChartTrackballInfo<T, D>(
           position: signalLinePoints[rsiPointIndex],
-          point: rsiPointInfo,
+          point: rsiPoint,
           series: this,
           pointIndex: rsiPointIndex,
+          segmentIndex: rsiPointIndex,
           seriesIndex: index,
-          name: defaultLegendItemText(),
+          name: rsiText,
+          header: tooltipHeaderText(rsiPoint),
+          text: trackballText(rsiPoint, rsiText),
           color: signalLineColor,
         ),
       );
@@ -689,32 +700,38 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
     if (showZones) {
       final int upperPointIndex = _findNearestPoint(_upperLinePoints, position);
       if (upperPointIndex != -1) {
-        final CartesianChartPoint<D> upperPointInfo =
+        final CartesianChartPoint<D> upperPoint =
             _chartPoint(upperPointIndex, 'upper');
         trackballInfo.add(
           ChartTrackballInfo<T, D>(
             position: _upperLinePoints[upperPointIndex],
-            point: upperPointInfo,
+            point: upperPoint,
             series: this,
             pointIndex: upperPointIndex,
+            segmentIndex: upperPointIndex,
             seriesIndex: index,
-            name: 'UpperLine',
+            name: trackballUpperLineText,
+            header: tooltipHeaderText(upperPoint),
+            text: trackballText(upperPoint, trackballUpperLineText),
             color: _upperLineColor,
           ),
         );
       }
       final int lowerPointIndex = _findNearestPoint(_lowerLinePoints, position);
       if (lowerPointIndex != -1) {
-        final CartesianChartPoint<D> lowerPointInfo =
+        final CartesianChartPoint<D> lowerPoint =
             _chartPoint(lowerPointIndex, 'lower');
         trackballInfo.add(
           ChartTrackballInfo<T, D>(
             position: _lowerLinePoints[lowerPointIndex],
-            point: lowerPointInfo,
+            point: lowerPoint,
             series: this,
             pointIndex: lowerPointIndex,
+            segmentIndex: lowerPointIndex,
             seriesIndex: index,
-            name: 'LowerLine',
+            name: trackballLowerLineText,
+            header: tooltipHeaderText(lowerPoint),
+            text: trackballText(lowerPoint, trackballLowerLineText),
             color: _lowerLineColor,
           ),
         );
@@ -728,7 +745,8 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
     num? nearPointX;
     num? nearPointY;
     int? pointIndex;
-    for (int i = 0; i < points.length; i++) {
+    final int length = points.length;
+    for (int i = 0; i < length; i++) {
       nearPointX ??= points[0].dx;
       nearPointY ??= yAxis!.visibleRange!.minimum;
 
@@ -769,19 +787,10 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
         xValue:
             type == 'rsi' ? xValues[pointIndex + period] : xValues[pointIndex],
         y: type == 'rsi'
-            ? yAxis!.pixelToPoint(
-                yAxis!.paintBounds,
-                signalLinePoints[pointIndex].dx,
-                signalLinePoints[pointIndex].dy)
+            ? _signalLineActualValues[pointIndex].dy
             : type == 'upper'
-                ? yAxis!.pixelToPoint(
-                    yAxis!.paintBounds,
-                    _upperLinePoints[pointIndex].dx,
-                    _upperLinePoints[pointIndex].dy)
-                : yAxis!.pixelToPoint(
-                    yAxis!.paintBounds,
-                    _lowerLinePoints[pointIndex].dx,
-                    _lowerLinePoints[pointIndex].dy));
+                ? _upperLineActualValues[pointIndex].dy
+                : _lowerLineActualValues[pointIndex].dy);
   }
 
   @override
@@ -846,11 +855,13 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
         _upperLinePath.lineTo(_upperLinePoints[i].dx, _upperLinePoints[i].dy);
       }
 
-      context.canvas.drawPath(
-          _upperLinePath,
+      drawDashes(
+          context.canvas,
+          _dashArray,
           strokePaint
             ..color = upperLineColor
-            ..strokeWidth = upperLineWidth);
+            ..strokeWidth = upperLineWidth,
+          path: _upperLinePath);
     }
 
     if (showZones &&
@@ -866,11 +877,13 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
         _lowerLinePath.lineTo(_lowerLinePoints[i].dx, _lowerLinePoints[i].dy);
       }
 
-      context.canvas.drawPath(
-          _lowerLinePath,
+      drawDashes(
+          context.canvas,
+          _dashArray,
           strokePaint
             ..color = lowerLineColor
-            ..strokeWidth = lowerLineWidth);
+            ..strokeWidth = lowerLineWidth,
+          path: _lowerLinePath);
     }
 
     context.canvas.restore();
@@ -879,8 +892,8 @@ class RsiIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
   @override
   void dispose() {
     _signalLineActualValues.clear();
-    _lowerLineValues.clear();
-    _upperLineValues.clear();
+    _lowerLineActualValues.clear();
+    _upperLineActualValues.clear();
     _lowerLinePoints.clear();
     _upperLinePoints.clear();
     _highValues.clear();

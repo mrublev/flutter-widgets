@@ -78,7 +78,10 @@ class DateTimeAxis extends ChartAxis {
     super.autoScrollingMode,
     super.axisLabelFormatter,
     this.onRendererCreated,
-  });
+  }) : assert(
+            (initialVisibleMaximum == null && initialVisibleMinimum == null) ||
+                autoScrollingDelta == null,
+            'Both properties have the same behavior to display the visible data points, use any one of the properties');
 
   /// Formats the date-time axis labels. The default data-time axis label can be
   /// formatted with various built-in date formats.
@@ -153,32 +156,113 @@ class DateTimeAxis extends ChartAxis {
   /// ```
   final DateTime? maximum;
 
-  /// The minimum visible value of the axis. The axis will be rendered from
-  /// this date initially.
+  /// The minimum visible value of the axis. The axis is rendered from this value initially, and
+  /// it applies only during load time. The value will not be updated when zooming or panning.
   ///
   /// Defaults to `null`.
+  ///
   /// ```dart
   /// Widget build(BuildContext context) {
   ///    return Container(
   ///        child: SfCartesianChart(
-  ///           primaryXAxis: DateTimeAxis(initialVisibleMinimum: DateTime(2000)),
+  ///           primaryYAxis: DateTimeAxis(initialVisibleMinimum: DateTime(2019)),
   ///        )
   ///    );
   /// }
   /// ```
+  ///
+  /// Use the [onRendererCreated] callback, as shown in the code below, to update the visible
+  /// minimum value dynamically.
+  ///
+  /// ```dart
+  /// DateTimeAxisController? axisController;
+  ///
+  /// @override
+  /// Widget build(BuildContext context) {
+  ///   return Scaffold(
+  ///     body: Column(
+  ///       children: [
+  ///         SfCartesianChart(
+  ///           primaryXAxis: DateTimeAxis(
+  ///             initialVisibleMinimum: DateTime(2019),
+  ///             onRendererCreated: (DateTimeAxisController controller) {
+  ///               axisController = controller;
+  ///             },
+  ///           ),
+  ///           series: <CartesianSeries<SalesData, DateTime>>[
+  ///             LineSeries<SalesData, DateTime>(
+  ///               dataSource: data,
+  ///               xValueMapper: (SalesData sales, _) => sales.year,
+  ///               yValueMapper: (SalesData sales, _) => sales.sales,
+  ///             ),
+  ///           ],
+  ///         ),
+  ///         TextButton(
+  ///           onPressed: () {
+  ///             if (axisController != null) {
+  ///              axisController!.visibleMinimum = DateTime(2017);
+  ///            }
+  ///           },
+  ///           child: const Text('Update Axis Range'),
+  ///         ),
+  ///       ],
+  ///     ),
+  ///   );
+  /// }
+  /// ```
   final DateTime? initialVisibleMinimum;
 
-  /// The maximum visible value of the axis. The axis will be rendered
-  /// from this date initially.
+  /// The maximum visible value of the axis. The axis is rendered from this value initially, and
+  /// it applies only during load time. The value will not be updated when zooming or panning.
   ///
   /// Defaults to `null`.
+  ///
   /// ```dart
   /// Widget build(BuildContext context) {
   ///    return Container(
   ///        child: SfCartesianChart(
-  ///          primaryXAxis: DateTimeAxis(initialVisibleMaximum: DateTime(2019)),
-  ///        )
-  ///    );
+  ///           primaryYAxis: DateTimeAxis(initialVisibleMaximum: DateTime(2020)),
+  ///        ));
+  /// }
+  /// ```
+  ///
+  /// Use the [onRendererCreated] callback, as shown in the code below, to update the visible
+  /// maximum value dynamically
+  ///
+  /// ```dart
+  /// DateTimeAxisController? axisController;
+  ///
+  /// @override
+  /// Widget build(BuildContext context) {
+  ///   return Scaffold(
+  ///     body: Column(
+  ///       children: [
+  ///         SfCartesianChart(
+  ///           primaryXAxis: DateTimeAxis(
+  ///             initialVisibleMaximum: DateTime(2020),
+  ///             onRendererCreated: (DateTimeAxisController controller) {
+  ///               axisController = controller;
+  ///             },
+  ///           ),
+  ///           series: <CartesianSeries<SalesData, DateTime>>[
+  ///             LineSeries<SalesData, DateTime>(
+  ///               dataSource: data,
+  ///               xValueMapper: (SalesData sales, _) => sales.year,
+  ///               yValueMapper: (SalesData sales, _) => sales.sales,
+  ///             ),
+  ///           ],
+  ///         ),
+  ///         TextButton(
+  ///           onPressed: () {
+  ///             if (axisController != null) {
+  ///              axisController!.visibleMaximum = DateTime(2024);
+  ///            }
+  ///           },
+  ///           child: const Text('Update Axis Range'),
+  ///         ),
+  ///       ],
+  ///     ),
+  ///   );
   /// }
   /// ```
   final DateTime? initialVisibleMaximum;
@@ -427,8 +511,17 @@ class RenderDateTimeAxis extends RenderChartAxis {
   }
 
   void _handleRangeControllerChange() {
-    _updateVisibleMinMax(
-        min: rangeController!.start, max: rangeController!.end);
+    dynamic start = rangeController!.start;
+    dynamic end = rangeController!.end;
+    if (rangeController!.start is! DateTime) {
+      start = DateTime.fromMillisecondsSinceEpoch(
+          (rangeController!.start as num).toInt());
+    }
+    if (rangeController!.end is! DateTime) {
+      end = DateTime.fromMillisecondsSinceEpoch(
+          (rangeController!.end as num).toInt());
+    }
+    _updateVisibleMinMax(min: start, max: end);
   }
 
   void _updateVisibleMinMax({DateTime? min, DateTime? max}) {
@@ -437,6 +530,20 @@ class RenderDateTimeAxis extends RenderChartAxis {
     }
     if (max != null) {
       controller.visibleMaximum = max;
+    }
+  }
+
+  @override
+  void updateRangeControllerValues(DoubleRange newVisibleRange) {
+    final DateTime start =
+        DateTime.fromMillisecondsSinceEpoch(newVisibleRange.minimum.toInt());
+    final DateTime end =
+        DateTime.fromMillisecondsSinceEpoch(newVisibleRange.maximum.toInt());
+    if (rangeController!.start != start) {
+      rangeController!.start = start;
+    }
+    if (rangeController!.end != end) {
+      rangeController!.end = end;
     }
   }
 
@@ -588,6 +695,9 @@ class RenderDateTimeAxis extends RenderChartAxis {
   @override
   DoubleRange updateAutoScrollingDelta(
       int scrollingDelta, DoubleRange actualRange, DoubleRange visibleRange) {
+    if (initialVisibleMaximum != null || initialVisibleMinimum != null) {
+      return visibleRange;
+    }
     final DateTimeIntervalType intervalType =
         autoScrollingDeltaType == DateTimeIntervalType.auto
             ? _visibleIntervalType
@@ -953,7 +1063,7 @@ class RenderDateTimeAxis extends RenderChartAxis {
   @override
   void generateVisibleLabels() {
     hasTrimmedAxisLabel = false;
-    if (visibleRange == null) {
+    if (visibleRange == null || visibleInterval == 0) {
       return;
     }
 
@@ -973,8 +1083,8 @@ class RenderDateTimeAxis extends RenderChartAxis {
         continue;
       }
 
-      final DateFormat niceDateFormat =
-          dateFormat ?? _niceDateFormat(current, previous.toInt());
+      final DateFormat niceDateFormat = dateFormat ??
+          dateTimeAxisLabelFormat(this, current, previous.toInt());
       String text = niceDateFormat
           .format(DateTime.fromMillisecondsSinceEpoch(current.toInt()));
       if (labelFormat != null && labelFormat != '') {
@@ -1022,6 +1132,9 @@ class RenderDateTimeAxis extends RenderChartAxis {
       }
       current = _nextDate(current, visibleInterval, visibleIntervalType)
           .millisecondsSinceEpoch;
+      if (previous == current) {
+        return;
+      }
     }
 
     super.generateVisibleLabels();
@@ -1149,73 +1262,6 @@ class RenderDateTimeAxis extends RenderChartAxis {
       }
     }
     return date;
-  }
-
-  DateFormat _niceDateFormat([num? current, int? previous]) {
-    final bool notDoubleInterval =
-        (interval != null && interval! % 1 == 0) || interval == null;
-    switch (visibleIntervalType) {
-      case DateTimeIntervalType.years:
-        return notDoubleInterval ? DateFormat.y() : DateFormat.MMMd();
-
-      case DateTimeIntervalType.months:
-        return (visibleRange!.minimum == current || current == previous!)
-            ? _firstLabelFormat()
-            : _normalDateFormat(current, previous);
-
-      case DateTimeIntervalType.days:
-        return (visibleRange!.minimum == current || current == previous!)
-            ? _firstLabelFormat()
-            : _normalDateFormat(current, previous);
-
-      case DateTimeIntervalType.hours:
-        return DateFormat.j();
-
-      case DateTimeIntervalType.minutes:
-        return DateFormat.Hm();
-
-      case DateTimeIntervalType.seconds:
-        return DateFormat.ms();
-
-      case DateTimeIntervalType.milliseconds:
-        return DateFormat('ss.SSS');
-
-      case DateTimeIntervalType.auto:
-        return DateFormat();
-    }
-  }
-
-  DateFormat _firstLabelFormat() {
-    late DateFormat format;
-    if (visibleIntervalType == DateTimeIntervalType.months) {
-      format = DateFormat('yyy MMM');
-    } else if (visibleIntervalType == DateTimeIntervalType.days) {
-      format = DateFormat.MMMd();
-    } else if (visibleIntervalType == DateTimeIntervalType.minutes) {
-      format = DateFormat.Hm();
-    }
-    return format;
-  }
-
-  // TODO(VijayakumarM): Optimize it.
-  DateFormat _normalDateFormat(num? current, int? previousLabel) {
-    final DateTime minimum =
-        DateTime.fromMillisecondsSinceEpoch(current!.toInt());
-    final DateTime maximum =
-        DateTime.fromMillisecondsSinceEpoch(previousLabel!);
-    late DateFormat format;
-    final bool isIntervalDecimal = visibleInterval % 1 == 0;
-    if (visibleIntervalType == DateTimeIntervalType.months) {
-      format = minimum.year == maximum.year
-          ? (isIntervalDecimal ? DateFormat.MMM() : DateFormat.MMMd())
-          : DateFormat('yyy MMM');
-    } else if (visibleIntervalType == DateTimeIntervalType.days) {
-      format = minimum.month != maximum.month
-          ? (isIntervalDecimal ? DateFormat.MMMd() : DateFormat.MEd())
-          : DateFormat.d();
-    }
-
-    return format;
   }
 
   @override

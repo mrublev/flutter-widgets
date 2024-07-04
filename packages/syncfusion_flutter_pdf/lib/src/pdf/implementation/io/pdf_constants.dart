@@ -814,6 +814,69 @@ class PdfDictionaryProperties {
 
   /// internal field
   static const String irt = 'IRT';
+
+  /// internal field
+  static const String b = 'B';
+
+  /// internal field
+  static const String nm = 'NM';
+
+  /// internal field
+  static const String cl = 'CL';
+
+  /// internal field
+  static const String ds = 'DS';
+
+  /// internal field
+  static const String rc = 'RC';
+
+  /// internal field
+  static const String repeat = 'Repeat';
+
+  /// internal field
+  static const String overlayText = 'OverlayText';
+
+  /// internal field
+  static const String inkList = 'InkList';
+
+  /// internal field
+  static const String customData = 'CustomData';
+
+  /// internal field
+  static const String sound = 'Sound';
+
+  /// internal field
+  static const String rt = 'RT';
+
+  /// internal field
+  static const String ss = 'SS';
+
+  /// internal field
+  static const String fd = 'FD';
+
+  /// internal field
+  static const String targetUnitConversion = 'TargetUnitConversion';
+
+  /// internal field
+  static const String dss = 'DSS';
+
+  /// internal field
+  static const String ocsps = 'OCSPs';
+
+  /// internal field
+  static const String crls = 'CRLs';
+
+  /// internal field
+  static const String vri = 'VRI';
+
+  /// internal field
+  static const String ocsp = 'OCSP';
+
+  /// internal field
+  static const String crl = 'CRL';
+
+  /// internal field
+  static const String certs = 'Certs';
 }
 
 /// Class of string PDF common operators.

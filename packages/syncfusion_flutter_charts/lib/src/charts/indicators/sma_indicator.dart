@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../behaviors/trackball.dart';
 import '../common/callbacks.dart';
 import '../common/chart_point.dart';
-import '../interactions/trackball.dart';
 import '../series/chart_series.dart';
 import '../utils/enum.dart';
 import '../utils/helper.dart';
@@ -237,8 +237,7 @@ class SmaIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
   set valueField(String value) {
     if (_valueField != value) {
       _valueField = value;
-      populateDataSource();
-      markNeedsLayout();
+      markNeedsPopulateAndLayout();
     }
   }
 
@@ -247,8 +246,7 @@ class SmaIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
   set period(int value) {
     if (_period != value) {
       _period = value;
-      populateDataSource();
-      markNeedsLayout();
+      markNeedsPopulateAndLayout();
     }
   }
 
@@ -290,9 +288,12 @@ class SmaIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
       }
     }
 
-    if (xValues.isNotEmpty && dataCount >= period && period > 0) {
-      _signalLineActualValues.clear();
-      _yValues.clear();
+    _signalLineActualValues.clear();
+    _yValues.clear();
+    if (xValues.isNotEmpty &&
+        dataCount >= period &&
+        period > 0 &&
+        signalLineWidth > 0) {
       _calculateSignalLineValues();
     }
 
@@ -328,18 +329,21 @@ class SmaIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
       average = sum / period;
       _yValues.add(average);
 
+      final double x = xValues[j].toDouble();
       final double y = average.toDouble();
+      xMinimum = min(xMinimum, x);
+      xMaximum = max(xMaximum, x);
       yMinimum = min(yMinimum, y);
       yMaximum = max(yMaximum, y);
-      _signalLineActualValues.add(Offset(xValues[j].toDouble(), y));
+      _signalLineActualValues.add(Offset(x, y));
 
       j++;
     }
 
-    xMin = min(xMin, xMinimum);
-    xMax = max(xMax, xMaximum);
-    yMin = min(yMin, yMinimum);
-    yMax = max(yMax, yMaximum);
+    xMin = xMinimum.isInfinite ? xMin : xMinimum;
+    xMax = xMaximum.isInfinite ? xMax : xMaximum;
+    yMin = yMinimum.isInfinite ? yMin : yMinimum;
+    yMax = yMaximum.isInfinite ? yMax : yMaximum;
   }
 
   num _fieldValue(int index, String valueField) {
@@ -397,15 +401,19 @@ class SmaIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
     final int nearestPointIndex = _findNearestPoint(signalLinePoints, position);
     if (nearestPointIndex != -1) {
       final CartesianChartPoint<D> chartPoint = _chartPoint(nearestPointIndex);
+      final String text = defaultLegendItemText();
       return <ChartTrackballInfo<T, D>>[
         ChartTrackballInfo<T, D>(
           position: signalLinePoints[nearestPointIndex],
           point: chartPoint,
           series: this,
           pointIndex: nearestPointIndex,
+          segmentIndex: nearestPointIndex,
           seriesIndex: index,
+          name: text,
+          header: tooltipHeaderText(chartPoint),
+          text: trackballText(chartPoint, text),
           color: signalLineColor,
-          name: defaultLegendItemText(),
         )
       ];
     }
@@ -417,7 +425,8 @@ class SmaIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
     num? nearPointX;
     num? nearPointY;
     int? pointIndex;
-    for (int i = 0; i < points.length; i++) {
+    final int length = points.length;
+    for (int i = 0; i < length; i++) {
       nearPointX ??= points[0].dx;
       nearPointY ??= yAxis!.visibleRange!.minimum;
 
@@ -452,10 +461,10 @@ class SmaIndicatorRenderer<T, D> extends IndicatorRenderer<T, D> {
 
   CartesianChartPoint<D> _chartPoint(int pointIndex) {
     return CartesianChartPoint<D>(
-        x: xRawValues[pointIndex + period - 1],
-        xValue: xValues[pointIndex + period - 1],
-        y: yAxis!.pixelToPoint(yAxis!.paintBounds,
-            signalLinePoints[pointIndex].dx, signalLinePoints[pointIndex].dy));
+      x: xRawValues[pointIndex + period - 1],
+      xValue: xValues[pointIndex + period - 1],
+      y: _signalLineActualValues[pointIndex].dy,
+    );
   }
 
   @override

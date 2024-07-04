@@ -356,9 +356,9 @@ class DataGridConfiguration {
   /// The widget to show over the bottom of the [SfDataGrid].
   Widget? footer;
 
-  /// An instance of a [ThemeData.colorScheme] that can be used to configure the
+  /// An instance of a [SfColorScheme.colorScheme] that can be used to configure the
   /// color properties in the [SfDataGrid].
-  ColorScheme? colorScheme;
+  SfColorScheme? colorScheme;
 
   /// Decides whether the Vertical ScrollController can be disposed of in the source itself.
   /// Default to true.
@@ -385,11 +385,6 @@ class DataGridConfiguration {
   /// Decides whether the vertical scrollbar should be shown.
   /// Defaults to true.
   bool showVerticalScrollbar = true;
-
-  /// Decides whether the filter icon should be shown when hovering the header cells.
-  ///
-  /// Defaults to false.
-  bool showFilterIconOnHover = false;
 
   /// A boolean flag to indicate whether column dragging is allowed or not.
   bool allowColumnsDragging = false;

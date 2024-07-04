@@ -449,39 +449,42 @@ class RangePointer extends LeafRenderObjectWidget implements GaugePointer {
   @override
   RenderObject createRenderObject(BuildContext context) {
     final SfGaugeThemeData gaugeTheme = SfGaugeTheme.of(context)!;
+    final ThemeData themeData = Theme.of(context);
     final RadialAxisScope radialAxisScope = RadialAxisScope.of(context);
     final RadialAxisInheritedWidget ancestor = context
         .dependOnInheritedWidgetOfExactType<RadialAxisInheritedWidget>()!;
 
     return RenderRangePointer(
-        value: value.clamp(ancestor.minimum, ancestor.maximum),
-        enableDragging: enableDragging,
-        onValueChanged: onValueChanged,
-        onValueChangeStart: onValueChangeStart,
-        onValueChangeEnd: onValueChangeEnd,
-        onValueChanging: onValueChanging,
-        cornerStyle: cornerStyle,
-        gradient: gradient,
-        pointerOffset: pointerOffset,
-        sizeUnit: sizeUnit,
-        width: width,
-        dashArray: dashArray,
-        color: color,
-        pointerAnimationController: radialAxisScope.animationController,
-        pointerInterval: radialAxisScope.pointerInterval,
-        enableAnimation: enableAnimation,
-        isRadialGaugeAnimationEnabled:
-            radialAxisScope.isRadialGaugeAnimationEnabled,
-        repaintNotifier: radialAxisScope.repaintNotifier,
-        animationType: animationType,
-        context: context,
-        gaugeThemeData: gaugeTheme);
+      value: value.clamp(ancestor.minimum, ancestor.maximum),
+      enableDragging: enableDragging,
+      onValueChanged: onValueChanged,
+      onValueChangeStart: onValueChangeStart,
+      onValueChangeEnd: onValueChangeEnd,
+      onValueChanging: onValueChanging,
+      cornerStyle: cornerStyle,
+      gradient: gradient,
+      pointerOffset: pointerOffset,
+      sizeUnit: sizeUnit,
+      width: width,
+      dashArray: dashArray,
+      color: color,
+      pointerAnimationController: radialAxisScope.animationController,
+      pointerInterval: radialAxisScope.pointerInterval,
+      enableAnimation: enableAnimation,
+      isRadialGaugeAnimationEnabled:
+          radialAxisScope.isRadialGaugeAnimationEnabled,
+      repaintNotifier: radialAxisScope.repaintNotifier,
+      animationType: animationType,
+      themeData: themeData,
+      gaugeThemeData: gaugeTheme,
+    );
   }
 
   @override
   void updateRenderObject(
       BuildContext context, RenderRangePointer renderObject) {
     final SfGaugeThemeData gaugeTheme = SfGaugeTheme.of(context)!;
+    final ThemeData themeData = Theme.of(context);
     final RadialAxisScope radialAxisScope = RadialAxisScope.of(context);
     final RadialAxisInheritedWidget ancestor = context
         .dependOnInheritedWidgetOfExactType<RadialAxisInheritedWidget>()!;
@@ -506,6 +509,7 @@ class RangePointer extends LeafRenderObjectWidget implements GaugePointer {
       ..isRadialGaugeAnimationEnabled =
           radialAxisScope.isRadialGaugeAnimationEnabled
       ..gaugeThemeData = gaugeTheme
+      ..themeData = themeData
       ..value = value.clamp(ancestor.minimum, ancestor.maximum);
     super.updateRenderObject(context, renderObject);
   }

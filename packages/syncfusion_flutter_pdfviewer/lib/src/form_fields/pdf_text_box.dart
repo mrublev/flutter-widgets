@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
-
 import '../../pdfviewer.dart';
+import '../change_tracker/change_tracker.dart';
 import 'pdf_form_field.dart';
 
 /// Represents the text form field.
@@ -71,12 +71,12 @@ class PdfTextFormFieldHelper extends PdfFormFieldHelper {
   late FocusNode focusNode;
 
   /// Creates the text form field object.
-  PdfTextFormField getFormField() {
+  PdfTextFormField getFormField(ChangeTracker changeTracker) {
     textFormField = PdfTextFormField._().._text = pdfTextField.text;
     super.load(textFormField);
 
     textEditingController = TextEditingController(text: textFormField._text);
-    focusNode = createFocusNode();
+    focusNode = createFocusNode(changeTracker);
 
     return textFormField;
   }
@@ -88,9 +88,34 @@ class PdfTextFormFieldHelper extends PdfFormFieldHelper {
   }
 
   /// Gets the focus node of the [PdfTextFormField].
-  FocusNode createFocusNode() {
-    return FocusNode()
-      ..addListener(() {
+  FocusNode createFocusNode(ChangeTracker changeTracker) {
+    return FocusNode(
+      onKeyEvent: (FocusNode focusNode, KeyEvent event) {
+        final bool isControlOrMeta =
+            HardwareKeyboard.instance.isControlPressed ||
+                HardwareKeyboard.instance.isMetaPressed;
+        final bool isLogicalOrPhysicalZ =
+            event.logicalKey == LogicalKeyboardKey.keyZ ||
+                event.physicalKey == PhysicalKeyboardKey.keyZ;
+        final bool isLogicalOrPhysicalY =
+            event.logicalKey == LogicalKeyboardKey.keyY ||
+                event.physicalKey == PhysicalKeyboardKey.keyY;
+
+        if (isControlOrMeta && isLogicalOrPhysicalZ) {
+          if (event is KeyDownEvent) {
+            changeTracker.undoController.undo();
+          }
+          return KeyEventResult.handled;
+        } else if (isControlOrMeta && isLogicalOrPhysicalY) {
+          if (event is KeyDownEvent) {
+            changeTracker.undoController.redo();
+          }
+          return KeyEventResult.handled;
+        } else {
+          return KeyEventResult.ignored;
+        }
+      },
+    )..addListener(() {
         if (!focusNode.hasFocus) {
           invokeFocusChange(focusNode.hasFocus);
         }
@@ -109,13 +134,6 @@ class PdfTextFormFieldHelper extends PdfFormFieldHelper {
       if (onValueChanged != null) {
         onValueChanged!(
             PdfFormFieldValueChangedDetails(textFormField, oldValue, newValue));
-      }
-
-      if (textFormField._children != null &&
-          textFormField._children!.isNotEmpty) {
-        for (final PdfTextFormField item in textFormField._children!) {
-          item.text = newValue;
-        }
       }
       rebuild();
     }
@@ -137,15 +155,28 @@ class PdfTextFormFieldHelper extends PdfFormFieldHelper {
     if (textEditingController.text != text) {
       textEditingController.text = text;
     }
+    _updateChildItems(text);
     pdfTextField.text = text;
+  }
+
+  /// Updates the grouped field items.
+  void _updateChildItems(String text) {
+    if (textFormField._children != null &&
+        textFormField._children!.isNotEmpty) {
+      for (final PdfTextFormField item in textFormField._children!) {
+        final PdfFormFieldHelper childHelper =
+            PdfFormFieldHelper.getHelper(item);
+        if (childHelper is PdfTextFormFieldHelper &&
+            childHelper.textEditingController.text != text) {
+          childHelper.textEditingController.text = text;
+        }
+      }
+    }
   }
 
   /// Builds the text form field widget.
   Widget build(BuildContext context, double heightPercentage,
       {required Function(Offset) onTap}) {
-    // Since the height of the text form field is dependent on the font size,
-    // we calculate the vertical padding in order to align the text vertically at the center.
-    final double verticalPadding = (bounds.height - pdfTextField.font.size) / 2;
     return Positioned(
       left: bounds.left / heightPercentage,
       top: bounds.top / heightPercentage,
@@ -162,7 +193,6 @@ class PdfTextFormFieldHelper extends PdfFormFieldHelper {
           readOnly: textFormField.readOnly,
           font: pdfTextField.font.name,
           fontSize: pdfTextField.font.size / heightPercentage,
-          verticalPadding: verticalPadding / heightPercentage,
           isPassword: pdfTextField.isPassword,
           fillColor: pdfTextField.backColor.isEmpty
               ? const Color.fromARGB(255, 221, 228, 255)
@@ -172,8 +202,21 @@ class PdfTextFormFieldHelper extends PdfFormFieldHelper {
                   pdfTextField.backColor.b,
                   1,
                 ),
+          borderColor: pdfTextField.borderColor.isEmpty
+              ? Colors.transparent
+              : Color.fromRGBO(
+                  pdfTextField.borderColor.r,
+                  pdfTextField.borderColor.g,
+                  pdfTextField.borderColor.b,
+                  1,
+                ),
+          borderWidth: pdfTextField.borderWidth / heightPercentage,
           multiline: pdfTextField.multiline,
           maxLength: pdfTextField.maxLength,
+          letterSpacing: pdfTextField.insertSpaces && pdfTextField.maxLength > 1
+              ? (pdfTextField.bounds.width / pdfTextField.maxLength - 1) /
+                  heightPercentage
+              : null,
           onValueChanged: invokeValueChanged,
           onFocusChange: invokeFocusChange,
         ),
@@ -201,10 +244,12 @@ class PdfTextBox extends StatefulWidget {
       this.isPassword = false,
       required this.fillColor,
       this.multiline = false,
-      required this.verticalPadding,
       this.maxLength = 0,
+      this.letterSpacing,
       this.onValueChanged,
       this.onFocusChange,
+      required this.borderColor,
+      required this.borderWidth,
       super.key});
 
   /// Text form field text editing controller.
@@ -237,11 +282,17 @@ class PdfTextBox extends StatefulWidget {
   /// Text form field focus change.
   final ValueChanged<bool>? onFocusChange;
 
-  /// Vertical padding.
-  final double verticalPadding;
-
   /// Text form field maximum length.
   final int maxLength;
+
+  /// Text form field letter spacing.
+  final double? letterSpacing;
+
+  /// Text form field border color
+  final Color borderColor;
+
+  /// Text form field border width
+  final double borderWidth;
 
   @override
   State<PdfTextBox> createState() => _PdfTextBoxState();
@@ -250,49 +301,63 @@ class PdfTextBox extends StatefulWidget {
 class _PdfTextBoxState extends State<PdfTextBox> {
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      onTap: () {
-        if (widget.onFocusChange != null) {
-          widget.onFocusChange!(true);
-        }
-      },
-      controller: widget.textEditingController,
-      focusNode: !widget.readOnly ? widget.focusNode : null,
-      readOnly: widget.readOnly,
-      maxLines: widget.multiline ? null : 1,
-      cursorColor: Colors.black,
-      obscureText: widget.isPassword,
-      onChanged: widget.onValueChanged,
-      inputFormatters: widget.maxLength > 0
-          ? <TextInputFormatter>[
-              LengthLimitingTextInputFormatter(widget.maxLength),
-            ]
-          : null,
-      keyboardType:
-          widget.multiline ? TextInputType.multiline : TextInputType.text,
-      scrollPhysics: widget.multiline ? const ClampingScrollPhysics() : null,
-      cursorWidth: 0.5,
-      expands: widget.multiline,
-      textAlignVertical: TextAlignVertical.top,
-      style: TextStyle(
-        color: Colors.black,
-        fontFamily: widget.font,
-        fontSize: widget.fontSize,
-      ),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: widget.fillColor,
-        contentPadding: widget.multiline
-            ? const EdgeInsets.all(3)
-            : EdgeInsets.symmetric(
-                vertical: widget.verticalPadding, horizontal: 3),
-        enabledBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.zero,
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.zero,
-          borderSide: BorderSide.none,
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: TextFormField(
+        onTap: () {
+          if (widget.onFocusChange != null) {
+            widget.onFocusChange!(true);
+          }
+        },
+        controller: widget.textEditingController,
+        focusNode: !widget.readOnly ? widget.focusNode : null,
+        readOnly: widget.readOnly,
+        maxLines: widget.multiline ? null : 1,
+        cursorColor: Colors.black,
+        obscureText: widget.isPassword,
+        onChanged: widget.onValueChanged,
+        inputFormatters: widget.maxLength > 0
+            ? <TextInputFormatter>[
+                LengthLimitingTextInputFormatter(widget.maxLength),
+              ]
+            : null,
+        keyboardType:
+            widget.multiline ? TextInputType.multiline : TextInputType.text,
+        scrollPhysics: widget.multiline ? const ClampingScrollPhysics() : null,
+        cursorWidth: 0.5,
+        expands: widget.multiline,
+        textAlignVertical: TextAlignVertical.top,
+        style: widget.letterSpacing != null
+            ? TextStyle(
+                color: Colors.black,
+                fontFamily: 'RobotoMono',
+                package: 'syncfusion_flutter_pdfviewer',
+                fontSize: widget.fontSize,
+                letterSpacing: widget.letterSpacing! - widget.fontSize / 2,
+              )
+            : TextStyle(
+                color: Colors.black,
+                fontFamily: widget.font,
+                fontSize: widget.fontSize,
+              ),
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: widget.fillColor,
+          contentPadding: widget.multiline
+              ? const EdgeInsets.all(3)
+              : widget.letterSpacing != null
+                  ? EdgeInsets.zero
+                  : const EdgeInsets.symmetric(horizontal: 3),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.zero,
+            borderSide: BorderSide(
+                color: widget.borderColor, width: widget.borderWidth),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.zero,
+            borderSide: BorderSide(
+                color: widget.borderColor, width: widget.borderWidth),
+          ),
         ),
       ),
     );

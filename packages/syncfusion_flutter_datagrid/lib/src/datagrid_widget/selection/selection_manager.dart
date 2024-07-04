@@ -25,7 +25,7 @@ class SelectionManagerBase extends ChangeNotifier {
 
   /// Processes the selection operation when [SfDataGrid] receives raw keyboard
   /// event.
-  void handleKeyEvent(RawKeyEvent keyEvent) {}
+  void handleKeyEvent(KeyEvent keyEvent) {}
 
   /// Called when the [SfDataGrid.selectionMode] is changed at run time.
   void onGridSelectionModeChanged() {}
@@ -201,6 +201,16 @@ class RowSelectionManager extends SelectionManagerBase {
     record = null;
   }
 
+  /// Check whether the index is outside the shift selected rows range.
+  bool isIndexOutsideRange(
+      int pressedRowIndex, int currentRecordIndex, int index) {
+    if (pressedRowIndex < currentRecordIndex) {
+      return index < pressedRowIndex || index > currentRecordIndex;
+    } else {
+      return index < currentRecordIndex || index > pressedRowIndex;
+    }
+  }
+
   void _processShiftKeySelection(
       RowColumnIndex rowColumnIndex, int currentRecordIndex) {
     final DataGridConfiguration dataGridConfiguration =
@@ -209,6 +219,15 @@ class RowSelectionManager extends SelectionManagerBase {
     List<DataGridRow> removedItems = <DataGridRow>[];
     removedItems = _shiftSelectedRows.toList();
 
+    for (final DataGridRow selectedRow
+        in List<DataGridRow>.from(_selectedRows)) {
+      final int selectedIndex =
+          dataGridConfiguration.source.effectiveRows.indexOf(selectedRow);
+      if (isIndexOutsideRange(
+          _pressedRowIndex, currentRecordIndex, selectedIndex)) {
+        _removeSelection(selectedRow, dataGridConfiguration);
+      }
+    }
     if (dataGridConfiguration.onSelectionChanging != null ||
         dataGridConfiguration.onSelectionChanged != null) {
       addedItems = _getAddedItems(
@@ -229,34 +248,37 @@ class RowSelectionManager extends SelectionManagerBase {
           .toList();
     }
     if (_raiseSelectionChanging(newItems: addedItems, oldItems: removedItems)) {
-      _addSelectionForShiftKey(currentRecordIndex);
+      _addSelectionForShiftKey(currentRecordIndex, removedItems);
       notifyListeners();
       _raiseSelectionChanged(newItems: addedItems, oldItems: removedItems);
     }
   }
 
-  void _addSelectionForShiftKey(int currentRecordIndex) {
+  void _addSelectionForShiftKey(
+      int currentRecordIndex, List<DataGridRow> removedItems) {
     late DataGridRow? record;
     final DataGridConfiguration dataGridConfiguration =
         _dataGridStateDetails!();
-    if (_shiftSelectedRows.isNotEmpty) {
-      for (final DataGridRow record in _shiftSelectedRows) {
-        if (record !=
-            selection_helper.getRecord(
-                dataGridConfiguration, _pressedRowIndex)) {
-          _removeSelection(record, dataGridConfiguration);
+    final DataGridRow? pressedRecord =
+        selection_helper.getRecord(dataGridConfiguration, _pressedRowIndex);
+    if (!_selectedRows.contains(pressedRecord)) {
+      _addSelection(pressedRecord, dataGridConfiguration);
+    }
+
+    if (removedItems.isNotEmpty) {
+      for (final DataGridRow items in removedItems) {
+        if (_selectedRows.contains(items)) {
+          _removeSelection(items, dataGridConfiguration);
         }
       }
-      _shiftSelectedRows.removeWhere((DataGridRow record) =>
-          record !=
-          selection_helper.getRecord(dataGridConfiguration, _pressedRowIndex)!);
     }
+
     if (_pressedRowIndex < currentRecordIndex) {
       for (int rowIndex = _pressedRowIndex + 1;
           rowIndex <= currentRecordIndex;
           rowIndex++) {
         record = selection_helper.getRecord(dataGridConfiguration, rowIndex);
-        if (record != null && !_selectedRows.contains(record)) {
+        if (record != null) {
           _shiftSelectedRows.add(record);
           _addSelection(record, dataGridConfiguration);
         }
@@ -266,7 +288,7 @@ class RowSelectionManager extends SelectionManagerBase {
           rowIndex >= currentRecordIndex;
           rowIndex--) {
         record = selection_helper.getRecord(dataGridConfiguration, rowIndex);
-        if (record != null && !_selectedRows.contains(record)) {
+        if (record != null) {
           _shiftSelectedRows.add(record);
           _addSelection(record, dataGridConfiguration);
         }
@@ -572,9 +594,7 @@ class RowSelectionManager extends SelectionManagerBase {
     }
 
     if (dataGridConfiguration.isShiftKeyPressed &&
-        dataGridConfiguration.selectionMode == SelectionMode.multiple &&
-        _selectedRows.contains(selection_helper.getRecord(
-            dataGridConfiguration, _pressedRowIndex))) {
+        dataGridConfiguration.selectionMode == SelectionMode.multiple) {
       _processShiftKeySelection(rowColumnIndex, recordIndex);
     }
   }
@@ -902,7 +922,7 @@ class RowSelectionManager extends SelectionManagerBase {
 
   //KeyNavigation
   @override
-  Future<void> handleKeyEvent(RawKeyEvent keyEvent) async {
+  Future<void> handleKeyEvent(KeyEvent keyEvent) async {
     final DataGridConfiguration dataGridConfiguration =
         _dataGridStateDetails!();
     if (dataGridConfiguration.currentCell.isEditing &&
@@ -965,7 +985,7 @@ class RowSelectionManager extends SelectionManagerBase {
     }
 
     if (keyEvent.logicalKey == LogicalKeyboardKey.keyA) {
-      if (keyEvent.isControlPressed) {
+      if (HardwareKeyboard.instance.isControlPressed) {
         _processSelectedAll();
       }
     }
@@ -998,7 +1018,7 @@ class RowSelectionManager extends SelectionManagerBase {
   }
 
   void _processEndKey(
-      DataGridConfiguration dataGridConfiguration, RawKeyEvent keyEvent) {
+      DataGridConfiguration dataGridConfiguration, KeyEvent keyEvent) {
     final CurrentCellManager currentCell = dataGridConfiguration.currentCell;
     final int lastCellIndex =
         selection_helper.getLastCellIndex(dataGridConfiguration);
@@ -1012,8 +1032,8 @@ class RowSelectionManager extends SelectionManagerBase {
     }
 
     if ((dataGridConfiguration.isMacPlatform
-            ? keyEvent.isMetaPressed
-            : keyEvent.isControlPressed) &&
+            ? HardwareKeyboard.instance.isMetaPressed
+            : HardwareKeyboard.instance.isControlPressed) &&
         keyEvent.logicalKey != LogicalKeyboardKey.arrowRight) {
       final int lastRowIndex =
           selection_helper.getLastNavigatingRowIndex(dataGridConfiguration);
@@ -1028,7 +1048,7 @@ class RowSelectionManager extends SelectionManagerBase {
   }
 
   void _processHomeKey(
-      DataGridConfiguration dataGridConfiguration, RawKeyEvent keyEvent) {
+      DataGridConfiguration dataGridConfiguration, KeyEvent keyEvent) {
     final CurrentCellManager currentCell = dataGridConfiguration.currentCell;
     final int firstCellIndex =
         selection_helper.getFirstCellIndex(dataGridConfiguration);
@@ -1042,8 +1062,8 @@ class RowSelectionManager extends SelectionManagerBase {
     }
 
     if ((dataGridConfiguration.isMacPlatform
-            ? keyEvent.isMetaPressed
-            : keyEvent.isControlPressed) &&
+            ? HardwareKeyboard.instance.isMetaPressed
+            : HardwareKeyboard.instance.isControlPressed) &&
         keyEvent.logicalKey != LogicalKeyboardKey.arrowLeft) {
       final int firstRowIndex =
           selection_helper.getFirstNavigatingRowIndex(dataGridConfiguration);
@@ -1080,7 +1100,7 @@ class RowSelectionManager extends SelectionManagerBase {
     }
   }
 
-  void _processKeyDown(RawKeyEvent keyEvent) {
+  void _processKeyDown(KeyEvent keyEvent) {
     final DataGridConfiguration dataGridConfiguration =
         _dataGridStateDetails!();
     final CurrentCellManager currentCell = dataGridConfiguration.currentCell;
@@ -1100,21 +1120,21 @@ class RowSelectionManager extends SelectionManagerBase {
     }
 
     if (dataGridConfiguration.isMacPlatform
-        ? keyEvent.isMetaPressed
-        : keyEvent.isControlPressed) {
+        ? HardwareKeyboard.instance.isMetaPressed
+        : HardwareKeyboard.instance.isControlPressed) {
       selection_helper.scrollInViewFromTop(dataGridConfiguration,
           needToScrollToMaxExtent: true);
       _processSelectionAndCurrentCell(
           dataGridConfiguration, RowColumnIndex(lastRowIndex, nextColumnIndex),
-          isShiftKeyPressed: keyEvent.isShiftPressed);
+          isShiftKeyPressed: HardwareKeyboard.instance.isShiftPressed);
     } else {
       _processSelectionAndCurrentCell(
           dataGridConfiguration, RowColumnIndex(nextRowIndex, nextColumnIndex),
-          isShiftKeyPressed: keyEvent.isShiftPressed);
+          isShiftKeyPressed: HardwareKeyboard.instance.isShiftPressed);
     }
   }
 
-  void _processKeyUp(RawKeyEvent keyEvent) {
+  void _processKeyUp(KeyEvent keyEvent) {
     final DataGridConfiguration dataGridConfiguration =
         _dataGridStateDetails!();
     final CurrentCellManager currentCell = dataGridConfiguration.currentCell;
@@ -1128,24 +1148,24 @@ class RowSelectionManager extends SelectionManagerBase {
     }
 
     if (dataGridConfiguration.isMacPlatform
-        ? keyEvent.isMetaPressed
-        : keyEvent.isControlPressed) {
+        ? HardwareKeyboard.instance.isMetaPressed
+        : HardwareKeyboard.instance.isControlPressed) {
       final int firstRowIndex =
           selection_helper.getFirstRowIndex(dataGridConfiguration);
       selection_helper.scrollInViewFromDown(dataGridConfiguration,
           needToScrollToMinExtent: true);
       _processSelectionAndCurrentCell(
           dataGridConfiguration, RowColumnIndex(firstRowIndex, columnIndex),
-          isShiftKeyPressed: keyEvent.isShiftPressed);
+          isShiftKeyPressed: HardwareKeyboard.instance.isShiftPressed);
     } else {
       _processSelectionAndCurrentCell(
           dataGridConfiguration, RowColumnIndex(previousRowIndex, columnIndex),
-          isShiftKeyPressed: keyEvent.isShiftPressed);
+          isShiftKeyPressed: HardwareKeyboard.instance.isShiftPressed);
     }
   }
 
   void _processKeyRight(
-      DataGridConfiguration dataGridConfiguration, RawKeyEvent keyEvent) {
+      DataGridConfiguration dataGridConfiguration, KeyEvent keyEvent) {
     if (dataGridConfiguration.navigationMode == GridNavigationMode.row) {
       return;
     }
@@ -1165,8 +1185,8 @@ class RowSelectionManager extends SelectionManagerBase {
     // Need to get previous column index only if the control key is
     // pressed in RTL mode since it will perform the home key event.
     if ((dataGridConfiguration.isMacPlatform
-            ? keyEvent.isMetaPressed
-            : keyEvent.isControlPressed) &&
+            ? HardwareKeyboard.instance.isMetaPressed
+            : HardwareKeyboard.instance.isControlPressed) &&
         dataGridConfiguration.textDirection == TextDirection.rtl) {
       nextCellIndex = selection_helper.getPreviousColumnIndex(
           dataGridConfiguration, currentCell.columnIndex);
@@ -1183,8 +1203,8 @@ class RowSelectionManager extends SelectionManagerBase {
     }
 
     if (dataGridConfiguration.isMacPlatform
-        ? keyEvent.isMetaPressed
-        : keyEvent.isControlPressed) {
+        ? HardwareKeyboard.instance.isMetaPressed
+        : HardwareKeyboard.instance.isControlPressed) {
       if (dataGridConfiguration.textDirection == TextDirection.rtl) {
         _processHomeKey(dataGridConfiguration, keyEvent);
       } else {
@@ -1201,7 +1221,7 @@ class RowSelectionManager extends SelectionManagerBase {
   }
 
   void _processKeyLeft(
-      DataGridConfiguration dataGridConfiguration, RawKeyEvent keyEvent) {
+      DataGridConfiguration dataGridConfiguration, KeyEvent keyEvent) {
     if (dataGridConfiguration.navigationMode == GridNavigationMode.row) {
       return;
     }
@@ -1219,8 +1239,8 @@ class RowSelectionManager extends SelectionManagerBase {
     // Need to get next column index only if the control key is
     // pressed in RTL mode since it will perform the end key event.
     if ((dataGridConfiguration.isMacPlatform
-            ? keyEvent.isMetaPressed
-            : keyEvent.isControlPressed) &&
+            ? HardwareKeyboard.instance.isMetaPressed
+            : HardwareKeyboard.instance.isControlPressed) &&
         dataGridConfiguration.textDirection == TextDirection.rtl) {
       previousCellIndex = selection_helper.getNextColumnIndex(
           dataGridConfiguration, currentCell.columnIndex);
@@ -1237,8 +1257,8 @@ class RowSelectionManager extends SelectionManagerBase {
     }
 
     if (dataGridConfiguration.isMacPlatform
-        ? keyEvent.isMetaPressed
-        : keyEvent.isControlPressed) {
+        ? HardwareKeyboard.instance.isMetaPressed
+        : HardwareKeyboard.instance.isControlPressed) {
       if (dataGridConfiguration.textDirection == TextDirection.rtl) {
         _processEndKey(dataGridConfiguration, keyEvent);
       } else {
@@ -1254,7 +1274,7 @@ class RowSelectionManager extends SelectionManagerBase {
     }
   }
 
-  void _processKeyTab(RawKeyEvent keyEvent) {
+  void _processKeyTab(KeyEvent keyEvent) {
     final DataGridConfiguration dataGridConfiguration =
         _dataGridStateDetails!();
     final CurrentCellManager currentCell = dataGridConfiguration.currentCell;
@@ -1283,7 +1303,7 @@ class RowSelectionManager extends SelectionManagerBase {
         dataGridConfiguration.container.extentWidth >
             dataGridConfiguration.viewWidth;
 
-    if (keyEvent.isShiftPressed) {
+    if (HardwareKeyboard.instance.isShiftPressed) {
       if (currentCell.columnIndex == firstCellIndex &&
           currentCell.rowIndex == firstRowIndex) {
         return;
@@ -1395,8 +1415,10 @@ class RowSelectionManager extends SelectionManagerBase {
           nextRowColumnIndex: rowColumnIndex,
           previousRowColumnIndex: previousRowColumnIndex);
       if (isShiftKeyPressed) {
-        _processSelection(
-            dataGridConfiguration, rowColumnIndex, previousRowColumnIndex);
+        _processShiftKeySelection(
+            rowColumnIndex,
+            grid_helper.resolveToRecordIndex(
+                dataGridConfiguration, rowColumnIndex.rowIndex));
       } else {
         notifyListeners();
       }

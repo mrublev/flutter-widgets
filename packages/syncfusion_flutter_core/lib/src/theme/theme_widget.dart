@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'barcodes_theme.dart';
 import 'calendar_theme.dart';
 import 'charts_theme.dart';
+import 'color_scheme.dart';
 import 'datagrid_theme.dart';
 import 'datapager_theme.dart';
 import 'daterangepicker_theme.dart';
@@ -13,6 +14,7 @@ import 'pdfviewer_theme.dart';
 import 'range_selector_theme.dart';
 import 'range_slider_theme.dart';
 import 'slider_theme.dart';
+import 'spark_charts_theme.dart';
 import 'treemap_theme.dart';
 
 /// Applies a theme to descendant Syncfusion widgets.
@@ -40,7 +42,7 @@ import 'treemap_theme.dart';
 /// }
 /// ```
 class SfTheme extends StatelessWidget {
-  /// Creating an argument constructor of SfTheme class.
+  /// Creating an argument constructor of [SfTheme] class.
   const SfTheme({
     Key? key,
     this.data,
@@ -91,15 +93,11 @@ class SfTheme extends StatelessWidget {
   /// ```
   final SfThemeData? data;
 
-  //ignore: unused_field
-  static final SfThemeData _kFallbackTheme = SfThemeData.fallback();
-
   /// The data from the closest [SfTheme] instance that encloses the given
   /// context.
   ///
   /// Defaults to [SfThemeData.fallback] if there is no [SfTheme] in the given
   /// build context.
-  ///
   static SfThemeData of(BuildContext context) {
     final _SfInheritedTheme? inheritedTheme =
         context.dependOnInheritedWidgetOfExactType<_SfInheritedTheme>();
@@ -107,6 +105,106 @@ class SfTheme extends StatelessWidget {
         (Theme.of(context).colorScheme.brightness == Brightness.light
             ? SfThemeData.light()
             : SfThemeData.dark());
+  }
+
+  /// Returns [SfColorScheme] based on the [useMaterial3].
+  static SfColorScheme colorScheme(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+    if (themeData.useMaterial3) {
+      return SfColorScheme.m3(
+        useMaterial3: themeData.useMaterial3,
+        brightness: themeData.brightness,
+        primary: themeData.colorScheme.primary,
+        onPrimary: themeData.colorScheme.onPrimary,
+        primaryContainer: themeData.colorScheme.primaryContainer,
+        secondaryContainer: themeData.colorScheme.secondaryContainer,
+        surface: themeData.colorScheme.surface,
+        onSurface: themeData.colorScheme.onSurface,
+        surfaceVariant: themeData.colorScheme.surfaceContainerHighest,
+        onSurfaceVariant: themeData.colorScheme.onSurfaceVariant,
+        inverseSurface: themeData.colorScheme.inverseSurface,
+        onInverseSurface: themeData.colorScheme.onInverseSurface,
+        outline: themeData.colorScheme.outline,
+        outlineVariant: themeData.colorScheme.outlineVariant,
+        textColor: themeData.colorScheme.onSurface,
+        splashColor: themeData.splashColor,
+        hoverColor: themeData.hoverColor,
+        highlightColor: themeData.highlightColor,
+        valueIndicatorColor: Colors.transparent,
+        transparent: Colors.transparent,
+        scrim: themeData.colorScheme.scrim,
+        palettes: _palettesM3(themeData),
+      );
+    } else {
+      return SfColorScheme.m2(
+        useMaterial3: themeData.useMaterial3,
+        brightness: themeData.brightness,
+        primary: themeData.colorScheme.primary,
+        onPrimary: themeData.colorScheme.onPrimary,
+        primaryContainer: themeData.colorScheme.primaryContainer,
+        secondaryContainer: themeData.colorScheme.secondaryContainer,
+        surface: themeData.colorScheme.surface,
+        onSurface: themeData.colorScheme.onSurface,
+        surfaceVariant: themeData.colorScheme.surfaceContainerHighest,
+        onSurfaceVariant: themeData.colorScheme.onSurfaceVariant,
+        inverseSurface: themeData.colorScheme.inverseSurface,
+        onInverseSurface: themeData.colorScheme.onInverseSurface,
+        outline: themeData.colorScheme.outline,
+        outlineVariant: themeData.colorScheme.outlineVariant,
+        textColor: themeData.colorScheme.onSurface,
+        splashColor: themeData.splashColor,
+        hoverColor: themeData.hoverColor,
+        highlightColor: themeData.highlightColor,
+        valueIndicatorColor: Colors.transparent,
+        transparent: Colors.transparent,
+        palettes: _palettesM2(),
+      );
+    }
+  }
+
+  static List<Color> _palettesM3(ThemeData themeData) {
+    if (themeData.colorScheme.brightness == Brightness.light) {
+      return const <Color>[
+        Color.fromRGBO(6, 174, 224, 1),
+        Color.fromRGBO(99, 85, 199, 1),
+        Color.fromRGBO(49, 90, 116, 1),
+        Color.fromRGBO(255, 180, 0, 1),
+        Color.fromRGBO(150, 60, 112, 1),
+        Color.fromRGBO(33, 150, 245, 1),
+        Color.fromRGBO(71, 59, 137, 1),
+        Color.fromRGBO(236, 92, 123, 1),
+        Color.fromRGBO(59, 163, 26, 1),
+        Color.fromRGBO(236, 131, 23, 1)
+      ];
+    } else {
+      return const <Color>[
+        Color.fromRGBO(255, 245, 0, 1),
+        Color.fromRGBO(51, 182, 119, 1),
+        Color.fromRGBO(218, 150, 70, 1),
+        Color.fromRGBO(201, 88, 142, 1),
+        Color.fromRGBO(77, 170, 255, 1),
+        Color.fromRGBO(255, 157, 69, 1),
+        Color.fromRGBO(178, 243, 46, 1),
+        Color.fromRGBO(185, 60, 228, 1),
+        Color.fromRGBO(48, 167, 6, 1),
+        Color.fromRGBO(207, 142, 14, 1)
+      ];
+    }
+  }
+
+  static List<Color> _palettesM2() {
+    return const <Color>[
+      Color.fromRGBO(75, 135, 185, 1),
+      Color.fromRGBO(192, 108, 132, 1),
+      Color.fromRGBO(246, 114, 128, 1),
+      Color.fromRGBO(248, 177, 149, 1),
+      Color.fromRGBO(116, 180, 155, 1),
+      Color.fromRGBO(0, 168, 181, 1),
+      Color.fromRGBO(73, 76, 162, 1),
+      Color.fromRGBO(255, 205, 96, 1),
+      Color.fromRGBO(255, 240, 219, 1),
+      Color.fromRGBO(238, 238, 238, 1)
+    ];
   }
 
   @override
@@ -118,13 +216,10 @@ class SfTheme extends StatelessWidget {
 class _SfInheritedTheme extends InheritedTheme {
   const _SfInheritedTheme({Key? key, this.data, required Widget child})
       : super(key: key, child: child);
-
   final SfThemeData? data;
-
   @override
   bool updateShouldNotify(_SfInheritedTheme oldWidget) =>
       data != oldWidget.data;
-
   @override
   Widget wrap(BuildContext context, Widget child) {
     final _SfInheritedTheme? ancestorTheme =
@@ -165,6 +260,7 @@ class SfThemeData with Diagnosticable {
       {Brightness? brightness,
       SfPdfViewerThemeData? pdfViewerThemeData,
       SfChartThemeData? chartThemeData,
+      SfSparkChartThemeData? sparkChartThemeData,
       SfCalendarThemeData? calendarThemeData,
       SfDataGridThemeData? dataGridThemeData,
       SfDataPagerThemeData? dataPagerThemeData,
@@ -177,33 +273,38 @@ class SfThemeData with Diagnosticable {
       SfMapsThemeData? mapsThemeData,
       SfTreemapThemeData? treemapThemeData}) {
     brightness ??= Brightness.light;
-    pdfViewerThemeData =
-        pdfViewerThemeData ?? SfPdfViewerThemeData(brightness: brightness);
-    chartThemeData = chartThemeData ?? SfChartThemeData(brightness: brightness);
+    pdfViewerThemeData = pdfViewerThemeData ?? SfPdfViewerThemeData.raw();
+    sparkChartThemeData = sparkChartThemeData ??
+        SfSparkChartThemeData.raw(brightness: brightness);
+    chartThemeData =
+        chartThemeData ?? SfChartThemeData.raw(brightness: brightness);
     calendarThemeData =
-        calendarThemeData ?? SfCalendarThemeData(brightness: brightness);
+        calendarThemeData ?? SfCalendarThemeData.raw(brightness: brightness);
     dataGridThemeData =
-        dataGridThemeData ?? SfDataGridThemeData(brightness: brightness);
+        dataGridThemeData ?? SfDataGridThemeData.raw(brightness: brightness);
     dateRangePickerThemeData = dateRangePickerThemeData ??
-        SfDateRangePickerThemeData(brightness: brightness);
+        SfDateRangePickerThemeData.raw(brightness: brightness);
     barcodeThemeData =
-        barcodeThemeData ?? SfBarcodeThemeData(brightness: brightness);
-    gaugeThemeData = gaugeThemeData ?? SfGaugeThemeData(brightness: brightness);
+        barcodeThemeData ?? SfBarcodeThemeData.raw(brightness: brightness);
+    gaugeThemeData =
+        gaugeThemeData ?? SfGaugeThemeData.raw(brightness: brightness);
     sliderThemeData =
-        sliderThemeData ?? SfSliderThemeData(brightness: brightness);
+        sliderThemeData ?? SfSliderThemeData.raw(brightness: brightness);
     rangeSelectorThemeData = rangeSelectorThemeData ??
-        SfRangeSelectorThemeData(brightness: brightness);
-    rangeSliderThemeData =
-        rangeSliderThemeData ?? SfRangeSliderThemeData(brightness: brightness);
-    mapsThemeData = mapsThemeData ?? SfMapsThemeData(brightness: brightness);
+        SfRangeSelectorThemeData.raw(brightness: brightness);
+    rangeSliderThemeData = rangeSliderThemeData ??
+        SfRangeSliderThemeData.raw(brightness: brightness);
+    mapsThemeData =
+        mapsThemeData ?? SfMapsThemeData.raw(brightness: brightness);
     treemapThemeData =
-        treemapThemeData ?? SfTreemapThemeData(brightness: brightness);
+        treemapThemeData ?? SfTreemapThemeData.raw(brightness: brightness);
     dataPagerThemeData =
-        dataPagerThemeData ?? SfDataPagerThemeData(brightness: brightness);
+        dataPagerThemeData ?? SfDataPagerThemeData.raw(brightness: brightness);
     return SfThemeData.raw(
         brightness: brightness,
         pdfViewerThemeData: pdfViewerThemeData,
         chartThemeData: chartThemeData,
+        sparkChartThemeData: sparkChartThemeData,
         calendarThemeData: calendarThemeData,
         dataGridThemeData: dataGridThemeData,
         dataPagerThemeData: dataPagerThemeData,
@@ -228,6 +329,7 @@ class SfThemeData with Diagnosticable {
       {required this.brightness,
       required this.pdfViewerThemeData,
       required this.chartThemeData,
+      required this.sparkChartThemeData,
       required this.calendarThemeData,
       required this.dataGridThemeData,
       required this.dateRangePickerThemeData,
@@ -316,6 +418,25 @@ class SfThemeData with Diagnosticable {
   /// }
   /// ```
   final SfChartThemeData chartThemeData;
+
+  /// Defines the default configuration of spark chart widgets.
+  ///
+  /// ```dart
+  /// Widget build(BuildContext context) {
+  ///  return Scaffold(
+  ///    appBar: AppBar(),
+  ///      body: Center(
+  ///        child: SfTheme(
+  ///          data: SfThemeData(
+  ///            sparkchartThemeData: SfSparkChartThemeData()
+  ///          ),
+  ///          child: SfCartesianChart(),
+  ///        ),
+  ///      )
+  ///   );
+  /// }
+  /// ```
+  final SfSparkChartThemeData sparkChartThemeData;
 
   /// Defines the default configuration of datagrid widgets.
   ///
@@ -532,6 +653,7 @@ class SfThemeData with Diagnosticable {
     Brightness? brightness,
     SfPdfViewerThemeData? pdfViewerThemeData,
     SfChartThemeData? chartThemeData,
+    SfSparkChartThemeData? sparkChartThemeData,
     SfCalendarThemeData? calendarThemeData,
     SfDataGridThemeData? dataGridThemeData,
     SfDateRangePickerThemeData? dateRangePickerThemeData,
@@ -548,6 +670,7 @@ class SfThemeData with Diagnosticable {
         brightness: brightness ?? this.brightness,
         pdfViewerThemeData: pdfViewerThemeData ?? this.pdfViewerThemeData,
         chartThemeData: chartThemeData ?? this.chartThemeData,
+        sparkChartThemeData: sparkChartThemeData ?? this.sparkChartThemeData,
         calendarThemeData: calendarThemeData ?? this.calendarThemeData,
         dataGridThemeData: dataGridThemeData ?? this.dataGridThemeData,
         dataPagerThemeData: dataPagerThemeData ?? this.dataPagerThemeData,
@@ -567,13 +690,14 @@ class SfThemeData with Diagnosticable {
   static SfThemeData lerp(SfThemeData? a, SfThemeData? b, double t) {
     assert(a != null);
     assert(b != null);
-
     return SfThemeData.raw(
         brightness: t < 0.5 ? a!.brightness : b!.brightness,
         pdfViewerThemeData: SfPdfViewerThemeData.lerp(
             a!.pdfViewerThemeData, b!.pdfViewerThemeData, t)!,
         chartThemeData:
             SfChartThemeData.lerp(a.chartThemeData, b.chartThemeData, t)!,
+        sparkChartThemeData: SfSparkChartThemeData.lerp(
+            a.sparkChartThemeData, b.sparkChartThemeData, t)!,
         calendarThemeData: SfCalendarThemeData.lerp(
             a.calendarThemeData, b.calendarThemeData, t)!,
         dataGridThemeData: SfDataGridThemeData.lerp(
@@ -603,11 +727,11 @@ class SfThemeData with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-
     return other is SfThemeData &&
         other.brightness == brightness &&
         other.pdfViewerThemeData == pdfViewerThemeData &&
         other.chartThemeData == chartThemeData &&
+        other.sparkChartThemeData == sparkChartThemeData &&
         other.calendarThemeData == calendarThemeData &&
         other.dataGridThemeData == dataGridThemeData &&
         other.dataPagerThemeData == dataPagerThemeData &&
@@ -627,6 +751,7 @@ class SfThemeData with Diagnosticable {
       brightness,
       pdfViewerThemeData,
       chartThemeData,
+      sparkChartThemeData,
       calendarThemeData,
       dataGridThemeData,
       dataPagerThemeData,
@@ -654,6 +779,9 @@ class SfThemeData with Diagnosticable {
     properties.add(DiagnosticsProperty<SfChartThemeData>(
         'chartThemeData', chartThemeData,
         defaultValue: defaultData.chartThemeData));
+    properties.add(DiagnosticsProperty<SfSparkChartThemeData>(
+        'sparkChartThemeData', sparkChartThemeData,
+        defaultValue: defaultData.sparkChartThemeData));
     properties.add(DiagnosticsProperty<SfCalendarThemeData>(
         'calendarThemeData', calendarThemeData,
         defaultValue: defaultData.calendarThemeData));

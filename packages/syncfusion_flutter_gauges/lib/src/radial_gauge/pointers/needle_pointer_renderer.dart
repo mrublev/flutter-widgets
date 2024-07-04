@@ -38,7 +38,8 @@ class RenderNeedlePointer extends RenderBox {
       required this.enableAnimation,
       required this.isRadialGaugeAnimationEnabled,
       required ValueNotifier<int> repaintNotifier,
-      required BuildContext context,
+      required ThemeData themeData,
+      required SfColorScheme colorScheme,
       required SfGaugeThemeData gaugeThemeData})
       : _value = value,
         _knobStyle = knobStyle,
@@ -52,7 +53,8 @@ class RenderNeedlePointer extends RenderBox {
         _repaintNotifier = repaintNotifier,
         _pointerAnimationController = pointerAnimationController,
         _needlePointerRenderer = needlePointerRenderer,
-        _themeData = Theme.of(context),
+        _themeData = themeData,
+        _colorScheme = colorScheme,
         _gaugeThemeData = gaugeThemeData;
 
   double _actualTailLength = 0;
@@ -86,7 +88,6 @@ class RenderNeedlePointer extends RenderBox {
   late double _radius;
   late double _sweepAngle;
   late Offset _axisCenter;
-  final ThemeData _themeData;
 
   /// Marker pointer old value.
   double? oldValue;
@@ -178,6 +179,32 @@ class RenderNeedlePointer extends RenderBox {
     }
 
     _gaugeThemeData = value;
+    markNeedsPaint();
+  }
+
+  /// Gets the themeData assigned to [RenderRadialAxisWidget].
+  ThemeData get themeData => _themeData;
+  ThemeData _themeData;
+
+  /// Sets the themeData for [RenderRadialAxisWidget].
+  set themeData(ThemeData value) {
+    if (value == _themeData) {
+      return;
+    }
+    _themeData = value;
+    markNeedsPaint();
+  }
+
+  /// Gets the colors assigned to [RenderNeedlePointer]
+  SfColorScheme get colorScheme => _colorScheme;
+  SfColorScheme _colorScheme;
+
+  /// Sets the colors for [RenderNeedlePointer]
+  set colorScheme(SfColorScheme value) {
+    if (value == _colorScheme) {
+      return;
+    }
+    _colorScheme = value;
     markNeedsPaint();
   }
 
@@ -567,7 +594,7 @@ class RenderNeedlePointer extends RenderBox {
     final Paint paint = Paint()
       ..color = needleColor ??
           _gaugeThemeData.needleColor ??
-          _themeData.colorScheme.onSurface
+          colorScheme.onSurface[255]!
       ..style = PaintingStyle.fill;
 
     final Path path = Path();
@@ -604,7 +631,7 @@ class RenderNeedlePointer extends RenderBox {
     final Paint tailPaint = Paint()
       ..color = tailStyle!.color ??
           _gaugeThemeData.tailColor ??
-          _themeData.colorScheme.onSurface;
+          colorScheme.onSurface[255]!;
 
     if (tailStyle!.gradient != null) {
       tailPaint.shader =
@@ -631,7 +658,7 @@ class RenderNeedlePointer extends RenderBox {
       final Paint knobPaint = Paint()
         ..color = knobStyle.color ??
             gaugeThemeData.knobColor ??
-            _themeData.colorScheme.onSurface;
+            colorScheme.onSurface[255]!;
 
       canvas.drawCircle(_axisCenter, _actualCapRadius, knobPaint);
 

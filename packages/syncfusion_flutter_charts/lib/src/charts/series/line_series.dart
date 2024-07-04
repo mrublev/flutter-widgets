@@ -4,12 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_core/core.dart';
 
+import '../behaviors/trackball.dart';
 import '../common/chart_point.dart';
 import '../common/core_tooltip.dart';
 import '../common/marker.dart';
 import '../interactions/tooltip.dart';
-import '../interactions/trackball.dart';
-import '../utils/constants.dart';
 import '../utils/helper.dart';
 import '../utils/typedef.dart';
 import 'chart_series.dart';
@@ -88,6 +87,8 @@ class LineSeriesRenderer<T, D> extends XyDataSeriesRenderer<T, D>
     return 3;
   }
 
+  bool _hasNewSegmentAdded = false;
+
   @override
   void setData(int index, ChartSegment segment) {
     super.setData(index, segment);
@@ -115,59 +116,22 @@ class LineSeriesRenderer<T, D> extends XyDataSeriesRenderer<T, D>
 
   /// Creates a segment for a data point in the series.
   @override
-  LineSegment<T, D> createSegment() => LineSegment<T, D>();
+  LineSegment<T, D> createSegment() {
+    _hasNewSegmentAdded = true;
+    return LineSegment<T, D>();
+  }
 
   @override
-  ShapeMarkerType effectiveLegendIconType() => dashArray != null
-      ? ShapeMarkerType.lineSeriesWithDashArray
-      : ShapeMarkerType.lineSeries;
+  ShapeMarkerType effectiveLegendIconType() =>
+      dashArray != null && !dashArray!.every((double value) => value <= 0)
+          ? ShapeMarkerType.lineSeriesWithDashArray
+          : ShapeMarkerType.lineSeries;
 
   /// Changes the series color and border width.
   @override
   void customizeSegment(ChartSegment segment) {
     updateSegmentColor(segment, color, borderWidth, isLineType: true);
     updateSegmentGradient(segment);
-  }
-
-  @override
-  List<ChartSegment> contains(Offset position) {
-    if (animationController != null && animationController!.isAnimating) {
-      return <ChartSegment>[];
-    }
-    final List<ChartSegment> segmentCollection = <ChartSegment>[];
-    int index = 0;
-    double delta = 0;
-    num? nearPointX;
-    num? nearPointY;
-    for (final ChartSegment segment in segments) {
-      if (segment is LineSegment<T, D>) {
-        nearPointX ??= segment.series.xValues[0];
-        nearPointY ??= segment.series.yAxis!.visibleRange!.minimum;
-        final Rect rect = segment.series.paintBounds;
-
-        final num touchXValue =
-            segment.series.xAxis!.pixelToPoint(rect, position.dx, position.dy);
-        final num touchYValue =
-            segment.series.yAxis!.pixelToPoint(rect, position.dx, position.dy);
-        final double curX = segment.series.xValues[index].toDouble();
-        final double curY = segment.series.yValues[index].toDouble();
-        if (delta == touchXValue - curX) {
-          if ((touchYValue - curY).abs() > (touchYValue - nearPointY).abs()) {
-            segmentCollection.clear();
-          }
-          segmentCollection.add(segment);
-        } else if ((touchXValue - curX).abs() <=
-            (touchXValue - nearPointX).abs()) {
-          nearPointX = curX;
-          nearPointY = curY;
-          delta = touchXValue - curX;
-          segmentCollection.clear();
-          segmentCollection.add(segment);
-        }
-      }
-      index++;
-    }
-    return segmentCollection;
   }
 
   @override
@@ -181,6 +145,9 @@ class LineSeriesRenderer<T, D> extends XyDataSeriesRenderer<T, D>
     paintMarkers(context, offset);
     paintDataLabels(context, offset);
     paintTrendline(context, offset);
+    if (animationController!.isCompleted) {
+      _hasNewSegmentAdded = false;
+    }
   }
 }
 
@@ -264,17 +231,27 @@ class LineSegment<T, D> extends ChartSegment {
   @override
   bool contains(Offset position) {
     if (points.isNotEmpty) {
-      final Rect bounds = Rect.fromCenter(
-          center: points[0], width: tooltipPadding, height: tooltipPadding);
-      return bounds.contains(position);
+      final ChartMarker marker = series.markerAt(currentSegmentIndex);
+      return tooltipTouchBounds(points[0], marker.width, marker.height)
+          .contains(position);
     }
     return false;
   }
 
   @override
   TooltipInfo? tooltipInfo({Offset? position, int? pointIndex}) {
+    if (points.isEmpty) {
+      return null;
+    }
+
     pointIndex ??= currentSegmentIndex;
-    final CartesianChartPoint<D> chartPoint = _chartPoint(pointIndex);
+    CartesianChartPoint<D> chartPoint = _chartPoint(pointIndex);
+    List<Color?> markerColors = <Color?>[fillPaint.color];
+    if (chartPoint.y != null && chartPoint.y!.isNaN) {
+      pointIndex += 1;
+      chartPoint = _chartPoint(pointIndex);
+      markerColors = <Color?>[series.segments[pointIndex].fillPaint.color];
+    }
     final ChartMarker marker = series.markerAt(pointIndex);
     final double markerHeight =
         series.markerSettings.isVisible ? marker.height / 2 : 0;
@@ -295,54 +272,31 @@ class LineSegment<T, D> extends ChartSegment {
       seriesIndex: series.index,
       segmentIndex: currentSegmentIndex,
       pointIndex: pointIndex,
-      markerColors: <Color?>[fillPaint.color],
+      markerColors: markerColors,
       markerType: marker.type,
     );
   }
 
   @override
-  TrackballInfo? trackballInfo(Offset position) {
-    final int nearestPointIndex = _findNearestPoint(points, position);
-    if (nearestPointIndex != -1) {
-      final int segmentIndex = nearestPointIndex == 0
-          ? currentSegmentIndex
-          : currentSegmentIndex + 1;
-      final int pointIndex = clampInt(segmentIndex, 0, series.dataCount - 1);
-      final CartesianChartPoint<D> chartPoint = _chartPoint(pointIndex);
-      return ChartTrackballInfo<T, D>(
-        position: points[nearestPointIndex],
-        point: chartPoint,
-        series: series,
-        pointIndex: currentSegmentIndex,
-        seriesIndex: series.index,
-      );
+  TrackballInfo? trackballInfo(Offset position, int pointIndex) {
+    final CartesianChartPoint<D> chartPoint = _chartPoint(pointIndex);
+    if (pointIndex == -1 ||
+        points.isEmpty ||
+        (chartPoint.y != null && chartPoint.y!.isNaN)) {
+      return null;
     }
-    return null;
-  }
 
-  int _findNearestPoint(List<Offset> points, Offset position) {
-    double delta = 0;
-    num? nearPointX;
-    num? nearPointY;
-    int? pointIndex;
-    for (int i = 0; i < points.length; i++) {
-      nearPointX ??= points[0].dx;
-      nearPointY ??= series.yAxis!.visibleRange!.minimum;
-
-      final num touchXValue = position.dx;
-      final double curX = points[i].dx;
-      final double curY = points[i].dy;
-      if (delta == touchXValue - curX) {
-        pointIndex = i;
-      } else if ((touchXValue - curX).abs() <=
-          (touchXValue - nearPointX).abs()) {
-        nearPointX = curX;
-        nearPointY = curY;
-        delta = touchXValue - curX;
-        pointIndex = i;
-      }
-    }
-    return pointIndex ?? -1;
+    return ChartTrackballInfo<T, D>(
+      position: points[0],
+      point: chartPoint,
+      series: series,
+      seriesIndex: series.index,
+      segmentIndex: currentSegmentIndex,
+      pointIndex: pointIndex,
+      text: series.trackballText(chartPoint, series.name),
+      header: series.tooltipHeaderText(chartPoint),
+      color: fillPaint.color,
+    );
   }
 
   CartesianChartPoint<D> _chartPoint(int pointIndex) {
@@ -380,8 +334,28 @@ class LineSegment<T, D> extends ChartSegment {
     final Offset start;
     final Offset end;
     if (animationFactor < 1) {
-      start = Offset.lerp(_oldPoints[0], points[0], animationFactor)!;
-      end = Offset.lerp(_oldPoints[1], points[1], animationFactor)!;
+      if (series.animationType == AnimationType.realtime &&
+          series._hasNewSegmentAdded &&
+          !isEmpty &&
+          series.dataCount == currentSegmentIndex + 2) {
+        final double prevX = _oldPoints[0].dx;
+        final double prevY = _oldPoints[0].dy;
+        final double x1 = points[0].dx;
+        final double y1 = points[0].dy;
+        final double x2 = points[1].dx;
+        final double y2 = points[1].dy;
+
+        final double newX1 = prevX + (x1 - prevX) * animationFactor;
+        final double newY1 = prevY + (y1 - prevY) * animationFactor;
+        final double newX2 = newX1 + (x2 - newX1) * animationFactor;
+        final double newY2 = newY1 + (y2 - newY1) * animationFactor;
+
+        start = Offset(newX1, newY1);
+        end = Offset(newX2, newY2);
+      } else {
+        start = Offset.lerp(_oldPoints[0], points[0], animationFactor)!;
+        end = Offset.lerp(_oldPoints[1], points[1], animationFactor)!;
+      }
     } else {
       start = points[0];
       end = points[1];

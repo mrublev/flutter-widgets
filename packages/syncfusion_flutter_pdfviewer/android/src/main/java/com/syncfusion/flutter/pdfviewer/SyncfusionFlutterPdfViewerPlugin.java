@@ -3,6 +3,7 @@ package com.syncfusion.flutter.pdfviewer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
@@ -26,6 +27,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.nio.ByteBuffer;
+import java.lang.Math;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
@@ -80,10 +83,21 @@ public class SyncfusionFlutterPdfViewerPlugin implements FlutterPlugin, MethodCa
   public void onMethodCall(@NonNull final MethodCall call, @NonNull final Result result) {
     resultPdf = result;
     switch (call.method) {
-      case "getImage":
-        getImage(Integer.parseInt(Objects.requireNonNull(call.argument("index")).toString()),
-                Double.parseDouble(Objects.requireNonNull(call.argument("scale")).toString()),
-                (String) call.argument("documentID"));
+      case "getPage":
+        getPage(
+          Integer.parseInt(Objects.requireNonNull(call.argument("index")).toString()),
+          Integer.parseInt(Objects.requireNonNull(call.argument("width")).toString()),
+          Integer.parseInt(Objects.requireNonNull(call.argument("height")).toString()),
+          (String) call.argument("documentID"));
+        break;
+      case "getTileImage":
+        getTileImage(Integer.parseInt(Objects.requireNonNull(call.argument("pageNumber")).toString()),
+            Double.parseDouble(Objects.requireNonNull(call.argument("scale")).toString()),
+            Double.parseDouble(Objects.requireNonNull(call.argument("x")).toString()),
+            Double.parseDouble(Objects.requireNonNull(call.argument("y")).toString()),
+            Double.parseDouble(Objects.requireNonNull(call.argument("width")).toString()),
+            Double.parseDouble(Objects.requireNonNull(call.argument("height")).toString()),
+            (String) call.argument("documentID"));
         break;
       case "initializePdfRenderer":
         result.success(initializePdfRenderer((byte[]) call.argument("documentBytes"),
@@ -107,37 +121,6 @@ public class SyncfusionFlutterPdfViewerPlugin implements FlutterPlugin, MethodCa
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
-  }
-
-  ///Calculate the screenResolution of device with Android version R and above.
-  @RequiresApi(api = Build.VERSION_CODES.R)
-  void getScreenResolutionForAndroidR()
-  {
-    final WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-    viewportWidth  = manager.getCurrentWindowMetrics().getBounds().width();
-  }
-
-  ///Calculate the screenResolution of device with below Android version R.
-  @SuppressWarnings("deprecation")
-  void getScreenResolutionBeforeForAndroidR()
-  {
-    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-    Display display = wm.getDefaultDisplay();
-    DisplayMetrics metrics = new DisplayMetrics();
-    display.getMetrics(metrics);
-    viewportWidth = metrics.widthPixels / metrics.density;
-  }
-
-  ///Calculate the screenResolution of device.
-  private  void getScreenResolution() {
-    if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.R)
-    {
-      getScreenResolutionForAndroidR();
-    }
-    else
-    {
-      getScreenResolutionBeforeForAndroidR();
-    }
   }
 
   // Initializes the PDF Renderer and returns the page count.
@@ -169,17 +152,10 @@ public class SyncfusionFlutterPdfViewerPlugin implements FlutterPlugin, MethodCa
       int count = Objects.requireNonNull(documentRepo.get(documentID)).renderer.getPageCount();
       pageHeight = new double[count];
       pageWidth = new double[count];
-      getScreenResolution();
       for (int i = 0; i < count; i++) {
         PdfRenderer.Page page = Objects.requireNonNull(documentRepo.get(documentID)).renderer.openPage(i);
         pageHeight[i] = page.getHeight();
         pageWidth[i] = page.getWidth();
-        if(viewportWidth>pageWidth[i])
-        {
-          double heightFactor=pageHeight[i] / pageWidth[i];
-          pageWidth[i]=viewportWidth;
-          pageHeight[i]=pageWidth[i]*heightFactor;
-        }
         page.close();
       }
       return pageHeight;
@@ -195,13 +171,9 @@ public class SyncfusionFlutterPdfViewerPlugin implements FlutterPlugin, MethodCa
     if (pageWidth == null) {
         int count = Objects.requireNonNull(documentRepo.get(documentID)).renderer.getPageCount();
         pageWidth = new double[count];
-        getScreenResolution();
         for (int i = 0; i < count; i++) {
           PdfRenderer.Page page = Objects.requireNonNull(documentRepo.get(documentID)).renderer.openPage(i);
           pageWidth[i] = page.getWidth();
-          if (viewportWidth > pageWidth[i]) {
-            pageWidth[i] = viewportWidth;
-          }
           page.close();
         }
      }
@@ -213,10 +185,21 @@ public class SyncfusionFlutterPdfViewerPlugin implements FlutterPlugin, MethodCa
 
   // Gets the specific page from PdfRenderer
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  void getImage(int pageIndex, double scale, String documentID) {
+  void getPage(int pageIndex, int width, int height, String documentID) {
     try {
       ExecutorService executor = Executors.newCachedThreadPool();
-     Runnable bitmapRunnable = new PdfRunnable(Objects.requireNonNull(documentRepo.get(documentID)).renderer, resultPdf, pageIndex, scale,pageWidth,pageHeight);
+     Runnable bitmapRunnable = new PdfRunnable(Objects.requireNonNull(documentRepo.get(documentID)).renderer, resultPdf, pageIndex, pageWidth, pageHeight, width, height);
+      executor.submit(bitmapRunnable);
+    } catch (Exception e) {
+      resultPdf.error(e.getMessage(), e.getLocalizedMessage(), e.getMessage());
+    }
+  }
+  
+  void getTileImage(int pageNumber, double currentScale, double x, double y, double width, double height, String documentID) {
+    try {
+      ExecutorService executor = Executors.newCachedThreadPool();
+      Runnable bitmapRunnable = new TileImageRunnable(Objects.requireNonNull(documentRepo.get(documentID)).renderer,
+              resultPdf, pageNumber, currentScale, x, y, width, height);
       executor.submit(bitmapRunnable);
     } catch (Exception e) {
       resultPdf.error(e.getMessage(), e.getLocalizedMessage(), e.getMessage());
@@ -255,18 +238,20 @@ class PdfRunnable implements Runnable {
   final private PdfRenderer renderer;
   final private Result resultPdf;
   final private int pageIndex;
-  private double scale;
   private double[] pageWidth;
   private double[] pageHeight;
+  private int width;
+  private int height;
   private PdfRenderer.Page page;
 
-  PdfRunnable(PdfRenderer renderer, Result resultPdf, int pageIndex, double scale,double[] pageWidth,double[] pageHeight) {
+  PdfRunnable(PdfRenderer renderer, Result resultPdf, int pageIndex, double[] pageWidth,double[] pageHeight, int width, int height) {
     this.resultPdf = resultPdf;
     this.renderer = renderer;
     this.pageIndex = pageIndex;
-    this.scale = scale;
     this.pageWidth = pageWidth;
     this.pageHeight = pageHeight;
+    this.width = width;
+    this.height = height;
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -281,21 +266,82 @@ class PdfRunnable implements Runnable {
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   public void run() {
     page = renderer.openPage(pageIndex - 1);
-    if (scale < 1.75)
-    {
-      scale = 1.75;
-    }
-    int width = (int) (pageWidth[pageIndex-1] * scale);
-    int height = (int) (pageHeight[pageIndex-1] * scale);
-    final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    double scale = Math.min(width / pageWidth[pageIndex-1], height / pageHeight[pageIndex-1]);
+    final Bitmap bitmap = Bitmap.createBitmap(width ,height, Bitmap.Config.ARGB_8888);
     bitmap.eraseColor(Color.WHITE);
     final Rect rect = new Rect(0, 0, width, height);
     page.render(bitmap, rect, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
     page.close();
     page = null;
-    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
-    imageBytes = outStream.toByteArray();
+    ByteBuffer buffer = ByteBuffer.allocate(bitmap.getByteCount());
+    bitmap.copyPixelsToBuffer(buffer);
+    imageBytes = buffer.array();
+    synchronized (this) {
+      notifyAll();
+    }
+    new Handler(Looper.getMainLooper()).post(new Runnable() {
+      @Override
+      public void run() {
+        resultPdf.success(imageBytes);
+      }
+    });
+  }
+}
+
+class TileImageRunnable implements Runnable {
+  private byte[] imageBytes = null;
+  final private PdfRenderer renderer;
+  final private Result resultPdf;
+  final private int pageIndex;
+  private double scale;
+
+  private double tileWidth;
+  private double tileHeight;
+
+  private double  tileX;
+  private double tileY;
+
+  private PdfRenderer.Page page;
+  
+  TileImageRunnable(PdfRenderer renderer, Result resultPdf, int pageIndex, double currentScale, double x,
+      double y, double width, double height) {
+
+    this.resultPdf = resultPdf;
+    this.renderer = renderer;
+    this.pageIndex = pageIndex;
+    this.scale = currentScale;
+
+    this.tileWidth = width;
+    this.tileHeight = height;
+    this.tileX = x;
+    this.tileY = y;
+  }
+  
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+  public void dispose() {
+    imageBytes = null;
+    if (page != null) {
+      page.close();
+      page = null;
+    }
+  }
+
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+  public void run() {
+    page = renderer.openPage(pageIndex - 1);
+
+    final Bitmap bitmap = Bitmap.createBitmap((int)tileWidth, (int)tileHeight, Bitmap.Config.ARGB_8888);
+    bitmap.eraseColor(Color.WHITE);
+    Matrix matrix = new Matrix();
+    matrix.postTranslate((float)-tileX, (float)-tileY);
+    matrix.postScale((float)(scale), (float)(scale));
+    final Rect rect = new Rect(0, 0, (int)tileWidth, (int)tileHeight);
+    page.render(bitmap, rect, matrix, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+    page.close();
+    page = null;
+    ByteBuffer buffer = ByteBuffer.allocate(bitmap.getByteCount());
+    bitmap.copyPixelsToBuffer(buffer);
+    imageBytes = buffer.array();
     synchronized (this) {
       notifyAll();
     }

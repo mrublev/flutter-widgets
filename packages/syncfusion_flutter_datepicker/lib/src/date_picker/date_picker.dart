@@ -13,6 +13,7 @@ import '../../datepicker.dart';
 
 import 'month_view.dart';
 import 'picker_helper.dart';
+import 'theme.dart';
 import 'year_view.dart';
 
 /// Signature for callback that reports that the picker state value changed.
@@ -5627,7 +5628,7 @@ class _SfDateRangePickerState extends State<_SfDateRangePicker>
 
   @override
   void didChangeDependencies() {
-    _textScaleFactor = MediaQuery.textScalerOf(context).scale(_textScaleFactor);
+    _textScaleFactor = MediaQuery.textScalerOf(context).scale(1);
     final TextDirection direction = Directionality.of(context);
     // default width value will be device width when the widget placed inside a
     // infinity width widget
@@ -5887,15 +5888,18 @@ class _SfDateRangePickerState extends State<_SfDateRangePicker>
   SfDateRangePickerThemeData _getPickerThemeData(
       SfDateRangePickerThemeData pickerTheme, ThemeData themeData) {
     final ColorScheme colorScheme = themeData.colorScheme;
+    final SfDateRangePickerThemeData effectiveThemeData =
+        SfDateRangePickerThemeKey(context);
     return pickerTheme.copyWith(
-        brightness: pickerTheme.brightness ?? colorScheme.brightness,
-        backgroundColor: pickerTheme.backgroundColor ?? Colors.transparent,
-        headerBackgroundColor:
-            pickerTheme.headerBackgroundColor ?? Colors.transparent,
-        viewHeaderBackgroundColor:
-            pickerTheme.viewHeaderBackgroundColor ?? Colors.transparent,
+        brightness: themeData.brightness,
+        backgroundColor:
+            pickerTheme.backgroundColor ?? effectiveThemeData.backgroundColor,
+        headerBackgroundColor: pickerTheme.headerBackgroundColor ??
+            effectiveThemeData.headerBackgroundColor,
+        viewHeaderBackgroundColor: pickerTheme.viewHeaderBackgroundColor ??
+            effectiveThemeData.viewHeaderBackgroundColor,
         weekNumberBackgroundColor: pickerTheme.weekNumberBackgroundColor ??
-            colorScheme.onSurface.withOpacity(0.08),
+            effectiveThemeData.weekNumberBackgroundColor,
         viewHeaderTextStyle: themeData.textTheme.bodyMedium!
             .copyWith(
               color: colorScheme.onSurface.withOpacity(0.87),
@@ -6042,15 +6046,16 @@ class _SfDateRangePickerState extends State<_SfDateRangePicker>
                     )
                     .merge(pickerTheme.weekendDatesTextStyle)
                     .merge(widget.monthCellStyle.weekendTextStyle),
-        selectionColor: pickerTheme.selectionColor ?? colorScheme.primary,
-        startRangeSelectionColor:
-            pickerTheme.startRangeSelectionColor ?? colorScheme.primary,
+        selectionColor:
+            pickerTheme.selectionColor ?? effectiveThemeData.selectionColor,
+        startRangeSelectionColor: pickerTheme.startRangeSelectionColor ??
+            effectiveThemeData.startRangeSelectionColor,
         rangeSelectionColor: pickerTheme.rangeSelectionColor ??
-            colorScheme.primary.withOpacity(0.1),
-        endRangeSelectionColor:
-            pickerTheme.endRangeSelectionColor ?? colorScheme.primary,
-        todayHighlightColor:
-            pickerTheme.todayHighlightColor ?? colorScheme.primary);
+            effectiveThemeData.rangeSelectionColor,
+        endRangeSelectionColor: pickerTheme.endRangeSelectionColor ??
+            effectiveThemeData.endRangeSelectionColor,
+        todayHighlightColor: pickerTheme.todayHighlightColor ??
+            effectiveThemeData.todayHighlightColor);
   }
 
   void _updateFadeAnimation() {
@@ -6834,13 +6839,8 @@ class _SfDateRangePickerState extends State<_SfDateRangePicker>
       headerWidth = pickerWidth;
     }
 
-    Color? backgroundColor = widget.headerStyle.backgroundColor ??
+    final Color? backgroundColor = widget.headerStyle.backgroundColor ??
         _datePickerTheme.headerBackgroundColor;
-    if (!isHorizontal && backgroundColor == Colors.transparent) {
-      backgroundColor = _datePickerTheme.brightness == Brightness.dark
-          ? Colors.grey[850]!
-          : Colors.white;
-    }
     final Widget header = Positioned(
       top: 0,
       left: 0,
@@ -7408,9 +7408,10 @@ class _SfDateRangePickerState extends State<_SfDateRangePicker>
             }
 
             _controller.selectedDates = _getSelectedDates(_selectedDates);
-            if (!isSameSelectedDate)
+            if (!isSameSelectedDate) {
               _raiseSelectionChangedCallback(widget,
                   value: _controller.selectedDates);
+            }
           }
           break;
         case DateRangePickerSelectionMode.range:
@@ -7427,9 +7428,10 @@ class _SfDateRangePickerState extends State<_SfDateRangePicker>
             }
 
             _controller.selectedRange = _selectedRange;
-            if (!isSameSelectedDate)
+            if (!isSameSelectedDate) {
               _raiseSelectionChangedCallback(widget,
                   value: _controller.selectedRange);
+            }
           }
           break;
         case DateRangePickerSelectionMode.multiRange:
@@ -7446,9 +7448,10 @@ class _SfDateRangePickerState extends State<_SfDateRangePicker>
             }
 
             _controller.selectedRanges = _getSelectedRanges(_selectedRanges);
-            if (!isSameSelectedDate)
+            if (!isSameSelectedDate) {
               _raiseSelectionChangedCallback(widget,
                   value: _controller.selectedRanges);
+            }
           }
       }
     }
@@ -9012,7 +9015,7 @@ class _PickerScrollViewState extends State<_PickerScrollView>
                 : null,
             child: FocusScope(
               node: _focusNode,
-              onKey: _onKeyDown,
+              onKeyEvent: _onKeyDown,
               child: CustomScrollViewerLayout(
                   _addViews(context),
                   widget.picker.navigationDirection ==
@@ -10054,11 +10057,11 @@ class _PickerScrollViewState extends State<_PickerScrollView>
     return selectedDate;
   }
 
-  KeyEventResult _switchViewsByKeyBoardEvent(RawKeyEvent event) {
+  KeyEventResult _switchViewsByKeyBoardEvent(KeyEvent event) {
     /// Ctrl + and Ctrl - used by browser to zoom the page, hence as referred
     /// EJ2 scheduler, we have used alt + numeric to switch between views in
     /// datepicker web
-    if (event.isAltPressed) {
+    if (HardwareKeyboard.instance.isAltPressed) {
       if (event.logicalKey == LogicalKeyboardKey.digit1) {
         _pickerStateDetails.view = DateRangePickerView.month;
       } else if (event.logicalKey == LogicalKeyboardKey.digit2) {
@@ -10082,7 +10085,7 @@ class _PickerScrollViewState extends State<_PickerScrollView>
       _PickerViewState currentVisibleViewState,
       _PickerView currentVisibleView,
       DateRangePickerView pickerView,
-      RawKeyEvent event) {
+      KeyEvent event) {
     dynamic selectedDate;
     if (_pickerStateDetails.selectedDate != null &&
         widget.picker.selectionMode == DateRangePickerSelectionMode.single) {
@@ -10102,7 +10105,7 @@ class _PickerScrollViewState extends State<_PickerScrollView>
             DateRangePickerSelectionMode.multiple &&
         _pickerStateDetails.selectedDates != null &&
         _pickerStateDetails.selectedDates!.isNotEmpty &&
-        event.isShiftPressed) {
+        HardwareKeyboard.instance.isShiftPressed) {
       final dynamic date = _pickerStateDetails
           .selectedDates![_pickerStateDetails.selectedDates!.length - 1];
       selectedDate = _getYearSelectedDate(
@@ -10125,7 +10128,7 @@ class _PickerScrollViewState extends State<_PickerScrollView>
                 DateRangePickerSelectionMode.extendableRange) &&
         _pickerStateDetails.selectedRange != null &&
         _pickerStateDetails.selectedRange.startDate != null &&
-        event.isShiftPressed) {
+        HardwareKeyboard.instance.isShiftPressed) {
       final dynamic date = currentVisibleViewState._lastSelectedDate;
       selectedDate = _getYearSelectedDate(
           date, event.logicalKey, currentVisibleView, currentVisibleViewState);
@@ -10308,13 +10311,14 @@ class _PickerScrollViewState extends State<_PickerScrollView>
     }
   }
 
-  KeyEventResult _onKeyDown(FocusNode node, RawKeyEvent event) {
+  KeyEventResult _onKeyDown(FocusNode node, KeyEvent event) {
     KeyEventResult result = KeyEventResult.ignored;
-    if (event.runtimeType != RawKeyDownEvent) {
+    if (event.runtimeType != KeyDownEvent) {
       return result;
     }
 
-    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.tab) {
+    if (HardwareKeyboard.instance.isShiftPressed &&
+        event.logicalKey == LogicalKeyboardKey.tab) {
       FocusScope.of(context).previousFocus();
       return KeyEventResult.handled;
     }
@@ -10328,7 +10332,7 @@ class _PickerScrollViewState extends State<_PickerScrollView>
 
     result = _switchViewsByKeyBoardEvent(event);
 
-    if (event.isControlPressed) {
+    if (HardwareKeyboard.instance.isControlPressed) {
       final bool canMoveToNextView = DateRangePickerHelper.canMoveToNextViewRtl(
           pickerView,
           DateRangePickerHelper.getNumberOfWeeksInView(
@@ -10505,7 +10509,7 @@ class _PickerScrollViewState extends State<_PickerScrollView>
   }
 
   dynamic _updateSingleSelectionByKeyBoardKeys(
-      RawKeyEvent event, _PickerView currentView) {
+      KeyEvent event, _PickerView currentView) {
     dynamic selectedDate = _pickerStateDetails.selectedDate;
     if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
       if (isSameDate(_pickerStateDetails.selectedDate,
@@ -10553,10 +10557,10 @@ class _PickerScrollViewState extends State<_PickerScrollView>
     return null;
   }
 
-  dynamic _updateMultiAndRangeSelectionByKeyBoard(RawKeyEvent event,
-      _PickerViewState currentState, _PickerView currentView) {
+  dynamic _updateMultiAndRangeSelectionByKeyBoard(
+      KeyEvent event, _PickerViewState currentState, _PickerView currentView) {
     dynamic selectedDate;
-    if (event.isShiftPressed &&
+    if (HardwareKeyboard.instance.isShiftPressed &&
         event.logicalKey == LogicalKeyboardKey.arrowRight) {
       if (widget.picker.selectionMode ==
           DateRangePickerSelectionMode.multiple) {
@@ -10579,7 +10583,7 @@ class _PickerScrollViewState extends State<_PickerScrollView>
             selectedDate));
         return selectedDate;
       }
-    } else if (event.isShiftPressed &&
+    } else if (HardwareKeyboard.instance.isShiftPressed &&
         event.logicalKey == LogicalKeyboardKey.arrowLeft) {
       if (widget.picker.selectionMode ==
           DateRangePickerSelectionMode.multiple) {
@@ -10602,7 +10606,7 @@ class _PickerScrollViewState extends State<_PickerScrollView>
             selectedDate));
         return selectedDate;
       }
-    } else if (event.isShiftPressed &&
+    } else if (HardwareKeyboard.instance.isShiftPressed &&
         event.logicalKey == LogicalKeyboardKey.arrowUp) {
       if (widget.picker.selectionMode ==
           DateRangePickerSelectionMode.multiple) {
@@ -10625,7 +10629,7 @@ class _PickerScrollViewState extends State<_PickerScrollView>
             selectedDate));
         return selectedDate;
       }
-    } else if (event.isShiftPressed &&
+    } else if (HardwareKeyboard.instance.isShiftPressed &&
         event.logicalKey == LogicalKeyboardKey.arrowDown) {
       if (widget.picker.selectionMode ==
           DateRangePickerSelectionMode.multiple) {
@@ -10652,8 +10656,8 @@ class _PickerScrollViewState extends State<_PickerScrollView>
     return null;
   }
 
-  dynamic _updateSelectedDate(RawKeyEvent event, _PickerViewState currentState,
-      _PickerView currentView) {
+  dynamic _updateSelectedDate(
+      KeyEvent event, _PickerViewState currentState, _PickerView currentView) {
     switch (widget.picker.selectionMode) {
       case DateRangePickerSelectionMode.single:
         {

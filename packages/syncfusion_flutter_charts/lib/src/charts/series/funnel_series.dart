@@ -1001,17 +1001,16 @@ class FunnelSeriesRenderer<T, D> extends ChartSeriesRenderer<T, D>
     List<List<num>>? chaoticYLists,
     List<List<num>>? yLists,
     List<ChartValueMapper<T, Object>>? fPaths,
+    List<List<Object?>>? chaoticFLists,
     List<List<Object?>>? fLists,
   ]) {
+    yValues.clear();
     if (yPaths == null) {
       yPaths = <ChartValueMapper<T, num>>[];
       chaoticYLists = <List<num>>[];
       yLists = <List<num>>[];
     }
-    if (fPaths == null) {
-      fPaths = <ChartValueMapper<T, Object>>[];
-      fLists = <List<Object?>>[];
-    }
+
     if (yValueMapper != null) {
       yPaths.add(yValueMapper!);
       if (sortingOrder == SortingOrder.none) {
@@ -1021,7 +1020,8 @@ class FunnelSeriesRenderer<T, D> extends ChartSeriesRenderer<T, D>
         yLists?.add(yValues);
       }
     }
-    super.populateDataSource(yPaths, chaoticYLists, yLists, fPaths, fLists);
+    super.populateDataSource(
+        yPaths, chaoticYLists, yLists, fPaths, chaoticFLists, fLists);
     markNeedsLegendUpdate();
     populateChartPoints();
   }
@@ -1051,6 +1051,7 @@ class FunnelSeriesRenderer<T, D> extends ChartSeriesRenderer<T, D>
     List<List<num>>? chaoticYLists,
     List<List<num>>? yLists,
     List<ChartValueMapper<T, Object>>? fPaths,
+    List<List<Object?>>? chaoticFLists,
     List<List<Object?>>? fLists,
   ]) {
     if (yPaths == null) {
@@ -1069,7 +1070,7 @@ class FunnelSeriesRenderer<T, D> extends ChartSeriesRenderer<T, D>
       }
     }
     super.updateDataPoints(removedIndexes, addedIndexes, replacedIndexes,
-        yPaths, chaoticYLists, yLists, fPaths, fLists);
+        yPaths, chaoticYLists, yLists, fPaths, chaoticFLists, fLists);
   }
 
   @override
@@ -1168,13 +1169,10 @@ class FunnelSeriesRenderer<T, D> extends ChartSeriesRenderer<T, D>
     final int segmentsCount = segments.length;
     for (int i = 0; i < dataCount; i++) {
       final int legendIndex = dataCount - 1 - i;
-      final Color legendIconColor = pointColorMapper != null
-          ? pointColors[legendIndex]!
-          : palette[legendIndex % palette.length];
       final ChartLegendItem legendItem = ChartLegendItem(
         text: xRawValues[legendIndex].toString(),
         iconType: toLegendShapeMarkerType(legendIconType, this),
-        iconColor: legendIconColor,
+        iconColor: effectiveColor(legendIndex),
         iconBorderWidth: legendIconBorderWidth(),
         series: this,
         seriesIndex: index,

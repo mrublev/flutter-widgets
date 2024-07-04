@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_setters_without_getters, avoid_redundant_argument_values
 
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -466,6 +468,9 @@ class SfDataPagerState extends State<SfDataPager> {
 
   int? _rowsPerPage;
 
+  // Holds the previous screen size.
+  Size? _previousScreenSize;
+
   bool get _isRTL => _textDirection == TextDirection.rtl;
 
   int get _lastPageIndex => _pageCount - 1;
@@ -504,6 +509,24 @@ class SfDataPagerState extends State<SfDataPager> {
       _rowsPerPageLabelWidth = 110;
     } else {
       _rowsPerPageLabelWidth = 0;
+    }
+  }
+
+  void _adjustScrollPosition() {
+    if (_scrollController!.hasClients) {
+      final double maxScrollExtent =
+          _scrollController!.position.maxScrollExtent;
+      final double cumulativeSize = _getCumulativeSize(_currentPageIndex);
+      if ((min(cumulativeSize, maxScrollExtent) != 0.0) &&
+          (_scrollController!.offset <= min(cumulativeSize, maxScrollExtent))) {
+        Future<void>.delayed(Duration.zero, () {
+          final double distance =
+              min(cumulativeSize, _scrollController!.position.maxScrollExtent);
+          _scrollController!.animateTo(distance,
+              duration: const Duration(milliseconds: 1),
+              curve: Curves.fastOutSlowIn);
+        });
+      }
     }
   }
 
@@ -578,23 +601,24 @@ class SfDataPagerState extends State<SfDataPager> {
     // Hence, we removed the _onInitialDataPagerLoaded method.
     // Also, introduced  the flag _isInitialLoading to restrict unwanted calling.
     if (!_suspendDataPagerUpdate && _isInitialLoading) {
-      _isInitialLoading = false;
       if (widget.initialPageIndex > 0) {
         final int index = _resolveToItemIndex(widget.initialPageIndex);
-        _handlePageItemTapped(index);
+        _handlePageItemTapped(index, _isInitialLoading);
         WidgetsBinding.instance.addPostFrameCallback((Duration timeStamp) {
           final double distance = _getCumulativeSize(index);
           _scrollTo(distance, canUpdate: true);
           _setCurrentPageIndex(index);
         });
       } else {
-        _handlePageItemTapped(_currentPageIndex);
+        _handlePageItemTapped(_currentPageIndex, _isInitialLoading);
       }
+      _isInitialLoading = false;
     } else if (!_suspendDataPagerUpdate && _isRowsPerPageChanged) {
       _isRowsPerPageChanged = false;
       _handlePageItemTapped(_currentPageIndex);
       WidgetsBinding.instance.addPostFrameCallback((Duration timeStamp) {
-        final double distance = _getCumulativeSize(_currentPageIndex);
+        final double distance = min(_getCumulativeSize(_currentPageIndex),
+            _scrollController!.position.maxScrollExtent);
         _scrollTo(distance, canUpdate: true);
         _setCurrentPageIndex(_currentPageIndex);
       });
@@ -613,7 +637,8 @@ class SfDataPagerState extends State<SfDataPager> {
     }
   }
 
-  Future<void> _handlePageItemTapped(int index) async {
+  Future<void> _handlePageItemTapped(int index,
+      [bool isInitialLoading = false]) async {
     // Issue:
     // FLUT-6759 - `handlePageChange` method is called infinite times when switch between pages so fast
     //
@@ -631,7 +656,10 @@ class SfDataPagerState extends State<SfDataPager> {
     if (index > widget.pageCount - 1) {
       index = (widget.pageCount - 1).toInt();
     }
-    final bool canChange = await _canChangePage(index);
+
+    final bool canRaiseNavigationEndCallback =
+        _controller!.selectedPageIndex != index || isInitialLoading;
+    final bool canChange = await _canChangePage(index, isInitialLoading);
 
     if (canChange) {
       if (mounted) {
@@ -641,7 +669,9 @@ class SfDataPagerState extends State<SfDataPager> {
         });
       }
     }
-    _raisePageNavigationEnd(canChange ? index : _currentPageIndex);
+    if (canRaiseNavigationEndCallback) {
+      _raisePageNavigationEnd(canChange ? index : _currentPageIndex);
+    }
 
     _suspendDataPagerUpdate = false;
   }
@@ -730,7 +760,8 @@ class SfDataPagerState extends State<SfDataPager> {
           _suspendDataPagerUpdate = false;
           return;
         }
-        final bool canChangePage = await _canChangePage(selectedPageIndex);
+        final bool canChangePage =
+            await _canChangePage(selectedPageIndex, true);
 
         if (canChangePage) {
           final double distance = _getScrollOffset(selectedPageIndex);
@@ -746,8 +777,12 @@ class SfDataPagerState extends State<SfDataPager> {
     _suspendDataPagerUpdate = false;
   }
 
-  Future<bool> _canChangePage(int index) async {
-    _raisePageNavigationStart(_currentPageIndex);
+  Future<bool> _canChangePage(int index,
+      [bool canRaiseNavigationStartCallback = false]) async {
+    if (_controller!.selectedPageIndex != index ||
+        canRaiseNavigationStartCallback) {
+      _raisePageNavigationStart(_currentPageIndex);
+    }
 
     final bool canHandle =
         await widget.delegate.handlePageChange(_currentPageIndex, index);
@@ -895,18 +930,19 @@ class SfDataPagerState extends State<SfDataPager> {
     }
   }
 
-  Widget _getIcon(String type, IconData iconData, bool visible) {
+  Widget _getIcon(
+      String type, IconData iconData, bool visible, SfColorScheme colorScheme) {
     Icon buildIcon() {
       return Icon(iconData,
           key: ValueKey<String>(type),
           size: 20,
           color: visible
-              ? _dataPagerThemeHelper!.brightness == Brightness.light
-                  ? _dataPagerThemeHelper!.disabledItemTextStyle.color
+              ? colorScheme.brightness == Brightness.light
+                  ? _dataPagerThemeHelper!.disabledItemTextStyle!.color
                       ?.withOpacity(0.54)
-                  : _dataPagerThemeHelper!.disabledItemTextStyle.color
+                  : _dataPagerThemeHelper!.disabledItemTextStyle!.color
                       ?.withOpacity(0.65)
-              : _dataPagerThemeHelper!.disabledItemTextStyle.color);
+              : _dataPagerThemeHelper!.disabledItemTextStyle!.color);
     }
 
     if (widget.direction == Axis.vertical) {
@@ -1101,10 +1137,10 @@ class SfDataPagerState extends State<SfDataPager> {
       double? height,
       double? width,
       EdgeInsetsGeometry? padding}) {
-    final ThemeData flutterTheme = Theme.of(context);
+    final SfColorScheme colorScheme = SfTheme.colorScheme(context);
     Widget? pagerItem;
     Key? pagerItemKey;
-    Color itemColor = _dataPagerThemeHelper!.itemColor;
+    Color itemColor = _dataPagerThemeHelper!.itemColor!;
     bool visible = true;
     late Border border;
 
@@ -1118,28 +1154,28 @@ class SfDataPagerState extends State<SfDataPager> {
               _dataPagerThemeHelper!.itemBorderWidth! > 0.0
           ? Border.all(
               width: _dataPagerThemeHelper!.itemBorderWidth!,
-              color: _dataPagerThemeHelper!.itemBorderColor)
-          : Border.all(width: 0.0, color: Colors.transparent);
+              color: _dataPagerThemeHelper!.itemBorderColor!)
+          : Border.all(width: 0.0, color: colorScheme.transparent);
     }
 
     if (pagerItem == null) {
       if (element == null) {
         visible = !_isNavigatorItemVisible(type!);
         itemColor = visible
-            ? _dataPagerThemeHelper!.itemColor
-            : _dataPagerThemeHelper!.disabledItemColor;
+            ? _dataPagerThemeHelper!.itemColor!
+            : _dataPagerThemeHelper!.disabledItemColor!;
 
         pagerItem = Semantics(
           label: '$type Page',
-          child: _getIcon(type, iconData!, visible),
+          child: _getIcon(type, iconData!, visible, colorScheme),
         );
         pagerItemKey = ObjectKey(type);
       } else {
         final bool isSelected = _checkIsSelectedIndex(element.index);
 
         itemColor = isSelected
-            ? _dataPagerThemeHelper!.selectedItemColor
-            : _dataPagerThemeHelper!.itemColor;
+            ? _dataPagerThemeHelper!.selectedItemColor!
+            : _dataPagerThemeHelper!.itemColor!;
 
         final int index = _resolveToItemIndexInView(element.index);
         pagerItem = Text(
@@ -1168,13 +1204,13 @@ class SfDataPagerState extends State<SfDataPager> {
       if (element == null) {
         visible = !_isNavigatorItemVisible(type!);
         itemColor = visible
-            ? _dataPagerThemeHelper!.itemColor
-            : _dataPagerThemeHelper!.disabledItemColor;
+            ? _dataPagerThemeHelper!.itemColor!
+            : _dataPagerThemeHelper!.disabledItemColor!;
       } else {
         final bool isSelected = _checkIsSelectedIndex(element.index);
         itemColor = isSelected
-            ? _dataPagerThemeHelper!.selectedItemColor
-            : _dataPagerThemeHelper!.itemColor;
+            ? _dataPagerThemeHelper!.selectedItemColor!
+            : _dataPagerThemeHelper!.itemColor!;
       }
     }
 
@@ -1196,20 +1232,21 @@ class SfDataPagerState extends State<SfDataPager> {
               imageConfig: _imageConfiguration!),
           child: Material(
             key: pagerItemKey,
-            color: Colors.transparent,
+            color: colorScheme.transparent,
             borderRadius: _dataPagerThemeHelper!.itemBorderRadius,
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               key: pagerItemKey,
               mouseCursor: visible
-                  ? MaterialStateMouseCursor.clickable
+                  ? WidgetStateMouseCursor.clickable
                   : SystemMouseCursors.basic,
               splashColor:
-                  visible ? flutterTheme.splashColor : Colors.transparent,
+                  visible ? colorScheme.splashColor : colorScheme.transparent,
               hoverColor:
-                  visible ? flutterTheme.hoverColor : Colors.transparent,
-              highlightColor:
-                  visible ? flutterTheme.highlightColor : Colors.transparent,
+                  visible ? colorScheme.hoverColor : colorScheme.transparent,
+              highlightColor: visible
+                  ? colorScheme.highlightColor
+                  : colorScheme.transparent,
               onTap: () {
                 if (element != null) {
                   if (element.index == _currentPageIndex) {
@@ -1309,7 +1346,7 @@ class SfDataPagerState extends State<SfDataPager> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(3.0),
               border: Border.all(
-                  color: _dataPagerThemeHelper!.dropdownButtonBorderColor)),
+                  color: _dataPagerThemeHelper!.dropdownButtonBorderColor!)),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<int>(
               focusColor: Colors.transparent,
@@ -1546,10 +1583,10 @@ class SfDataPagerState extends State<SfDataPager> {
       labelInfo,
       textDirection: _textDirection,
       style: TextStyle(
-          fontSize: _dataPagerThemeHelper!.itemTextStyle.fontSize,
-          fontWeight: _dataPagerThemeHelper!.itemTextStyle.fontWeight,
-          fontFamily: _dataPagerThemeHelper!.itemTextStyle.fontFamily,
-          color: _dataPagerThemeHelper!.itemTextStyle.color),
+          fontSize: _dataPagerThemeHelper!.itemTextStyle!.fontSize,
+          fontWeight: _dataPagerThemeHelper!.itemTextStyle!.fontWeight,
+          fontFamily: _dataPagerThemeHelper!.itemTextStyle!.fontFamily,
+          color: _dataPagerThemeHelper!.itemTextStyle!.color),
     );
 
     final Widget dataPagerLabel = SizedBox(
@@ -1638,8 +1675,7 @@ class SfDataPagerState extends State<SfDataPager> {
     textDirection = Directionality.of(context);
     _localization = SfLocalizations.of(context);
     final ThemeData themeData = Theme.of(context);
-    _dataPagerThemeHelper = DataPagerThemeHelper(
-        _dataPagerThemeData, Theme.of(context).colorScheme, themeData);
+    _dataPagerThemeHelper = DataPagerThemeHelper(context);
     _isDesktop = kIsWeb ||
         themeData.platform == TargetPlatform.macOS ||
         themeData.platform == TargetPlatform.windows ||
@@ -1692,6 +1728,13 @@ class SfDataPagerState extends State<SfDataPager> {
           ..addListener(_handleDataPagerControlPropertyChanged);
       }
 
+      if (_previousScreenSize != null) {
+        final Size currentScreenSize = MediaQuery.of(context).size;
+        if (_previousScreenSize != currentScreenSize) {
+          _adjustScrollPosition();
+        }
+      }
+
       _isDirty = true;
     }
   }
@@ -1703,8 +1746,16 @@ class SfDataPagerState extends State<SfDataPager> {
       color: _dataPagerThemeHelper!.backgroundColor,
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraint) {
+        _previousScreenSize = MediaQuery.of(context).size;
         _updateConstraintChanged(constraint);
-        if (_currentPageIndex > _pageCount) {
+        // Issue:
+        //
+        // FLUT-868631-The DataPager did not function correctly when updating the rows per page at runtime
+        //
+        // Fix: We have page count value starts from 0. But the current page index starts from 1.
+        // So, we have to check the current page index is greater than or equal to the page count.
+        // If it is true, then we have to set the current page index as page count - 1.
+        if (_currentPageIndex >= _pageCount && _pageCount > 0) {
           _currentPageIndex = _pageCount - 1;
         }
         if (_isDesktop && widget.direction == Axis.horizontal) {
@@ -2087,78 +2138,59 @@ class _DataPagerChangeNotifier {
 /// To Do
 class DataPagerThemeHelper {
   /// To Do
-  DataPagerThemeHelper(SfDataPagerThemeData? sfDataPagerThemeData,
-      ColorScheme? colorScheme, ThemeData themeData) {
-    brightness = sfDataPagerThemeData!.brightness ?? themeData.brightness;
-    backgroundColor = sfDataPagerThemeData.backgroundColor ??
-        colorScheme!.surface.withOpacity(0.12);
-    itemColor = sfDataPagerThemeData.itemColor ?? Colors.transparent;
-    itemTextStyle = sfDataPagerThemeData.itemTextStyle ??
-        TextStyle(
-            color: themeData.colorScheme.onSurface.withOpacity(0.6),
-            fontSize: 14,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w400);
+  DataPagerThemeHelper(BuildContext context) {
+    final SfDataPagerThemeData defaults = SfDataPagerTheme.of(context)!;
+    final SfDataPagerThemeData sfDataPagerThemeData =
+        _SfDataPagerThemeData(context);
+    backgroundColor =
+        defaults.backgroundColor ?? sfDataPagerThemeData.backgroundColor;
+    itemColor = defaults.itemColor ?? sfDataPagerThemeData.itemColor;
+    itemTextStyle =
+        defaults.itemTextStyle ?? sfDataPagerThemeData.itemTextStyle;
     selectedItemColor =
-        sfDataPagerThemeData.selectedItemColor ?? colorScheme!.primary;
-    selectedItemTextStyle = sfDataPagerThemeData.selectedItemTextStyle ??
-        TextStyle(
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-            color: colorScheme!.onPrimary);
+        defaults.selectedItemColor ?? sfDataPagerThemeData.selectedItemColor;
+    selectedItemTextStyle = defaults.selectedItemTextStyle ??
+        sfDataPagerThemeData.selectedItemTextStyle;
     disabledItemColor =
-        sfDataPagerThemeData.disabledItemColor ?? Colors.transparent;
-    disabledItemTextStyle = sfDataPagerThemeData.disabledItemTextStyle ??
-        TextStyle(
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-            color: colorScheme!.onSurface.withOpacity(0.36));
+        defaults.disabledItemColor ?? sfDataPagerThemeData.disabledItemColor;
+    disabledItemTextStyle = defaults.disabledItemTextStyle ??
+        sfDataPagerThemeData.disabledItemTextStyle;
     itemBorderColor =
-        sfDataPagerThemeData.itemBorderColor ?? Colors.transparent;
-    itemBorderWidth = sfDataPagerThemeData.itemBorderWidth;
+        defaults.itemBorderColor ?? sfDataPagerThemeData.itemBorderColor;
+    itemBorderWidth =
+        defaults.itemBorderWidth ?? sfDataPagerThemeData.itemBorderWidth;
     itemBorderRadius =
-        sfDataPagerThemeData.itemBorderRadius ?? BorderRadius.circular(50);
-    dropdownButtonBorderColor =
-        sfDataPagerThemeData.dropdownButtonBorderColor ??
-            colorScheme!.onSurface.withOpacity(0.12);
+        defaults.itemBorderRadius ?? sfDataPagerThemeData.itemBorderRadius;
+    dropdownButtonBorderColor = defaults.dropdownButtonBorderColor ??
+        sfDataPagerThemeData.dropdownButtonBorderColor;
   }
 
-  /// The brightness of the overall theme of the
-  /// application for the [SfDataPager] widgets.
-  ///
-  /// If [brightness] is not specified, then based on the
-  /// [Theme.of(context).brightness], brightness for
-  /// datapager widgets will be applied.
-  late Brightness brightness;
-
   /// The color of the page Items
-  late Color itemColor;
+  late final Color? itemColor;
 
   /// The color of the data pager background
-  late Color backgroundColor;
+  late final Color? backgroundColor;
 
   /// The style of the text of page Items
-  late TextStyle itemTextStyle;
+  late final TextStyle? itemTextStyle;
 
   /// The color of the page Items which are disabled.
-  late Color disabledItemColor;
+  late final Color? disabledItemColor;
 
   /// The style of the text of page items which are disabled.
-  late TextStyle disabledItemTextStyle;
+  late final TextStyle? disabledItemTextStyle;
 
   /// The color of the currently selected page item.
-  late Color selectedItemColor;
+  late final Color? selectedItemColor;
 
   /// The style of the text of currently selected page Item.
-  late TextStyle selectedItemTextStyle;
+  late final TextStyle? selectedItemTextStyle;
 
   /// The color of the border in page Item.
-  late Color itemBorderColor;
+  late final Color? itemBorderColor;
 
   /// The width of the border in page item.
-  double? itemBorderWidth;
+  late final double? itemBorderWidth;
 
   /// If non null, the corners of the page item are rounded by
   /// this [itemBorderRadius].
@@ -2167,8 +2199,67 @@ class DataPagerThemeHelper {
   /// see also:
   ///
   /// [BoxDecoration.borderRadius]
-  late BorderRadiusGeometry itemBorderRadius;
+  late final BorderRadiusGeometry? itemBorderRadius;
 
   ///The border color of the rowsPerPage dropdown button.
-  late Color dropdownButtonBorderColor;
+  late final Color? dropdownButtonBorderColor;
+}
+
+///
+///Defines the theme data for the [SfDataPager] widget for Material 2 design.
+///
+class _SfDataPagerThemeData extends SfDataPagerThemeData {
+  /// Constructs the [_SfDataPagerThemeData]
+  _SfDataPagerThemeData(this.context);
+
+  /// The build context.
+  final BuildContext context;
+
+  /// The color scheme derived from the current  SfTheme context.
+  late final SfColorScheme colorScheme = SfTheme.colorScheme(context);
+
+  @override
+  Color get itemColor => colorScheme.transparent;
+
+  @override
+  Color? get backgroundColor => colorScheme.surface[31];
+
+  @override
+  TextStyle get itemTextStyle => TextStyle(
+      color: colorScheme.onSurface[153],
+      fontSize: 14,
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w400);
+
+  @override
+  Color get disabledItemColor => colorScheme.transparent;
+
+  @override
+  TextStyle get disabledItemTextStyle => TextStyle(
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w400,
+      fontSize: 14,
+      color: colorScheme.onSurface[92]);
+
+  @override
+  Color? get selectedItemColor => colorScheme.primary[1];
+
+  @override
+  TextStyle get selectedItemTextStyle => TextStyle(
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w400,
+      fontSize: 14,
+      color: colorScheme.onPrimary);
+
+  @override
+  Color get itemBorderColor => colorScheme.transparent;
+
+  @override
+  double? get itemBorderWidth => null;
+
+  @override
+  BorderRadiusGeometry get itemBorderRadius => BorderRadius.circular(50);
+
+  @override
+  Color? get dropdownButtonBorderColor => colorScheme.onSurface[32];
 }

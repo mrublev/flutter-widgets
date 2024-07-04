@@ -1,4 +1,10 @@
-## Unreleased
+## [25.1.35] - 15/03/2024
+
+**General**
+
+* Provided th​e Material 3 themes support.
+
+## [22.2.8] - 08/08/2023
 
 **Bugs**
 

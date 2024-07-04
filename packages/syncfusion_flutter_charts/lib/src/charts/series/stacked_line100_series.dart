@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_core/core.dart';
 
+import '../behaviors/trackball.dart';
 import '../common/chart_point.dart';
 import '../common/core_tooltip.dart';
 import '../common/marker.dart';
 import '../interactions/tooltip.dart';
-import '../interactions/trackball.dart';
 import '../utils/constants.dart';
 import '../utils/helper.dart';
 import '../utils/typedef.dart';
@@ -99,7 +99,7 @@ class StackedLine100Series<T, D> extends StackedSeriesBase<T, D> {
 
 /// Creates series renderer for 100% stacked line series.
 class StackedLine100SeriesRenderer<T, D> extends StackedSeriesRenderer<T, D>
-    with LineSeriesMixin<T, D> {
+    with LineSeriesMixin<T, D>, Stacking100SeriesMixin<T, D> {
   @override
   double legendIconBorderWidth() {
     return 3;
@@ -135,56 +135,16 @@ class StackedLine100SeriesRenderer<T, D> extends StackedSeriesRenderer<T, D>
   StackedLine100Segment<T, D> createSegment() => StackedLine100Segment<T, D>();
 
   @override
-  ShapeMarkerType effectiveLegendIconType() => dashArray != null
-      ? ShapeMarkerType.stackedLine100SeriesWithDashArray
-      : ShapeMarkerType.stackedLine100Series;
+  ShapeMarkerType effectiveLegendIconType() =>
+      dashArray != null && !dashArray!.every((double value) => value <= 0)
+          ? ShapeMarkerType.stackedLine100SeriesWithDashArray
+          : ShapeMarkerType.stackedLine100Series;
 
   /// Changes the series color and border width.
   @override
   void customizeSegment(ChartSegment segment) {
     updateSegmentColor(segment, color, borderWidth, isLineType: true);
     updateSegmentGradient(segment);
-  }
-
-  @override
-  List<ChartSegment> contains(Offset position) {
-    if (animationController != null && animationController!.isAnimating) {
-      return <ChartSegment>[];
-    }
-    final List<ChartSegment> segmentCollection = <ChartSegment>[];
-    int index = 0;
-    double delta = 0;
-    num? nearPointX;
-    num? nearPointY;
-    for (final ChartSegment segment in segments) {
-      if (segment is StackedLine100Segment<T, D>) {
-        nearPointX ??= segment.series.xValues[0];
-        nearPointY ??= segment.series.yAxis!.visibleRange!.minimum;
-        final Rect rect = segment.series.paintBounds;
-
-        final num touchXValue =
-            segment.series.xAxis!.pixelToPoint(rect, position.dx, position.dy);
-        final num touchYValue =
-            segment.series.yAxis!.pixelToPoint(rect, position.dx, position.dy);
-        final double curX = segment.series.xValues[index].toDouble();
-        final double curY = segment.series.yValues[index].toDouble();
-        if (delta == touchXValue - curX) {
-          if ((touchYValue - curY).abs() > (touchYValue - nearPointY).abs()) {
-            segmentCollection.clear();
-          }
-          segmentCollection.add(segment);
-        } else if ((touchXValue - curX).abs() <=
-            (touchXValue - nearPointX).abs()) {
-          nearPointX = curX;
-          nearPointY = curY;
-          delta = touchXValue - curX;
-          segmentCollection.clear();
-          segmentCollection.add(segment);
-        }
-      }
-      index++;
-    }
-    return segmentCollection;
   }
 
   @override
@@ -268,9 +228,10 @@ class StackedLine100Segment<T, D> extends ChartSegment {
 
   @override
   bool contains(Offset position) {
-    for (int i = 0; i < points.length; i++) {
-      if (Rect.fromCenter(
-              center: points[i], width: tooltipPadding, height: tooltipPadding)
+    final MarkerSettings marker = series.markerSettings;
+    final int length = points.length;
+    for (int i = 0; i < length; i++) {
+      if (tooltipTouchBounds(points[i], marker.width, marker.height)
           .contains(position)) {
         return true;
       }
@@ -298,13 +259,24 @@ class StackedLine100Segment<T, D> extends ChartSegment {
 
   @override
   TooltipInfo? tooltipInfo({Offset? position, int? pointIndex}) {
+    if (points.isEmpty) {
+      return null;
+    }
+
+    pointDistance = series.markerSettings.width / 2;
     final int nearestPointIndex =
         position == null ? 0 : _nearestPointIndex(points, position);
     if (nearestPointIndex != -1) {
       pointIndex ??= (position == null || nearestPointIndex == 0
           ? currentSegmentIndex
           : currentSegmentIndex + 1);
-      final CartesianChartPoint<D> chartPoint = _chartPoint(pointIndex);
+      CartesianChartPoint<D> chartPoint = _chartPoint(pointIndex);
+      List<Color?> markerColors = <Color?>[fillPaint.color];
+      if (chartPoint.y != null && chartPoint.y!.isNaN) {
+        pointIndex += 1;
+        chartPoint = _chartPoint(pointIndex);
+        markerColors = <Color?>[series.segments[pointIndex].fillPaint.color];
+      }
       final ChartMarker marker = series.markerAt(pointIndex);
       final double markerHeight =
           series.markerSettings.isVisible ? marker.height / 2 : 0;
@@ -318,14 +290,14 @@ class StackedLine100Segment<T, D> extends ChartSegment {
         header: series.parent!.tooltipBehavior!.shared
             ? series.tooltipHeaderText(chartPoint)
             : series.name,
-        data: series.dataSource![currentSegmentIndex],
+        data: series.dataSource![pointIndex],
         point: chartPoint,
         series: series.widget,
         renderer: series,
         seriesIndex: series.index,
         segmentIndex: currentSegmentIndex,
-        pointIndex: currentSegmentIndex,
-        markerColors: <Color?>[fillPaint.color],
+        pointIndex: pointIndex,
+        markerColors: markerColors,
         markerType: marker.type,
       );
     }
@@ -333,48 +305,25 @@ class StackedLine100Segment<T, D> extends ChartSegment {
   }
 
   @override
-  TrackballInfo? trackballInfo(Offset position) {
-    final int nearestPointIndex = _findNearestPoint(points, position);
-    if (nearestPointIndex != -1) {
-      final int segmentIndex = nearestPointIndex == 0
-          ? currentSegmentIndex
-          : currentSegmentIndex + 1;
-      final int pointIndex = clampInt(segmentIndex, 0, series.dataCount - 1);
-      final CartesianChartPoint<D> chartPoint = _chartPoint(pointIndex);
-      return ChartTrackballInfo<T, D>(
-        position: points[nearestPointIndex],
-        point: chartPoint,
-        series: series,
-        pointIndex: pointIndex,
-        seriesIndex: series.index,
-      );
+  TrackballInfo? trackballInfo(Offset position, int pointIndex) {
+    final CartesianChartPoint<D> chartPoint = _chartPoint(pointIndex);
+    if (pointIndex == -1 ||
+        points.isEmpty ||
+        (chartPoint.y != null && chartPoint.y!.isNaN)) {
+      return null;
     }
-    return null;
-  }
 
-  int _findNearestPoint(List<Offset> points, Offset position) {
-    double delta = 0;
-    num? nearPointX;
-    num? nearPointY;
-    int? pointIndex;
-    for (int i = 0; i < points.length; i++) {
-      nearPointX ??= points[0].dx;
-      nearPointY ??= series.yAxis!.visibleRange!.minimum;
-
-      final num touchXValue = position.dx;
-      final double curX = points[i].dx;
-      final double curY = points[i].dy;
-      if (delta == touchXValue - curX) {
-        pointIndex = i;
-      } else if ((touchXValue - curX).abs() <=
-          (touchXValue - nearPointX).abs()) {
-        nearPointX = curX;
-        nearPointY = curY;
-        delta = touchXValue - curX;
-        pointIndex = i;
-      }
-    }
-    return pointIndex ?? -1;
+    return ChartTrackballInfo<T, D>(
+      position: points[0],
+      point: chartPoint,
+      series: series,
+      seriesIndex: series.index,
+      segmentIndex: currentSegmentIndex,
+      pointIndex: pointIndex,
+      text: series.trackballText(chartPoint, series.name),
+      header: series.tooltipHeaderText(chartPoint),
+      color: fillPaint.color,
+    );
   }
 
   /// Gets the color of the series.

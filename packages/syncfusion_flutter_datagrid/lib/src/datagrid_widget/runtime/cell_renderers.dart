@@ -38,15 +38,13 @@ class GridStackedHeaderCellRenderer
             fontFamily: 'Roboto',
             fontWeight: FontWeight.w500,
             fontSize: 14,
-            color:
-                dataGridConfiguration.colorScheme!.onSurface.withOpacity(0.87)),
+            color: dataGridConfiguration.colorScheme!.onSurface[222]),
         child: dataCell.stackedHeaderCell!.child);
 
     dataCell.columnElement = GridCell(
       key: dataCell.key!,
       dataCell: dataCell,
-      backgroundColor:
-          dataGridConfiguration.colorScheme!.surface.withOpacity(0.0001),
+      backgroundColor: dataGridConfiguration.colorScheme!.surface[0]!,
       isDirty: dataGridConfiguration.container.isDirty || dataCell.isDirty,
       dataGridStateDetails: _dataGridStateDetails,
       child: label,
@@ -76,22 +74,20 @@ class GridCellTextFieldRenderer
     final DataRowBase? dataRow = dataCell.dataRow;
     if (dataRow != null && dataRow.isSelectedRow) {
       return dataRow.isHoveredRow
-          ? dataGridConfiguration.dataGridThemeHelper!.rowHoverTextStyle
+          ? dataGridConfiguration.dataGridThemeHelper!.rowHoverTextStyle!
           : TextStyle(
               fontFamily: 'Roboto',
               fontWeight: FontWeight.w400,
               fontSize: 14,
-              color: dataGridConfiguration.colorScheme!.onSurface
-                  .withOpacity(0.87));
+              color: dataGridConfiguration.colorScheme!.onSurface[222]);
     } else {
       return dataRow!.isHoveredRow
-          ? dataGridConfiguration.dataGridThemeHelper!.rowHoverTextStyle
+          ? dataGridConfiguration.dataGridThemeHelper!.rowHoverTextStyle!
           : TextStyle(
               fontFamily: 'Roboto',
               fontWeight: FontWeight.w400,
               fontSize: 14,
-              color: dataGridConfiguration.colorScheme!.onSurface
-                  .withOpacity(0.87));
+              color: dataGridConfiguration.colorScheme!.onSurface[222]);
     }
   }
 }
@@ -117,7 +113,7 @@ class GridHeaderCellRenderer
       dataCell.columnElement = GridCell(
           key: dataCell.key!,
           dataCell: dataCell,
-          backgroundColor: Colors.transparent,
+          backgroundColor: dataGridConfiguration.colorScheme!.transparent,
           isDirty: dataGridConfiguration.container.isDirty ||
               dataCell.isDirty ||
               dataCell.dataRow!.isDirty,
@@ -144,8 +140,7 @@ class GridHeaderCellRenderer
           fontFamily: 'Roboto',
           fontWeight: FontWeight.w500,
           fontSize: 14,
-          color:
-              _dataGridStateDetails().colorScheme!.onSurface.withOpacity(0.87));
+          color: _dataGridStateDetails().colorScheme!.onSurface[222]);
     }
 
     dataCell.textStyle = getDefaultHeaderTextStyle();
@@ -321,8 +316,7 @@ class GridTableSummaryCellRenderer
             fontFamily: 'Roboto',
             fontWeight: FontWeight.w500,
             fontSize: 14,
-            color:
-                dataGridConfiguration.colorScheme!.onSurface.withOpacity(0.87)),
+            color: dataGridConfiguration.colorScheme!.onSurface[222]),
         child: getSummaryCell());
 
     dataCell.columnElement = GridCell(
@@ -391,7 +385,7 @@ class GridCaptionSummaryCellRenderer
         fontFamily: 'Roboto',
         fontWeight: FontWeight.w500,
         fontSize: 14,
-        color: dataGridConfiguration.colorScheme!.onSurface.withOpacity(0.87),
+        color: dataGridConfiguration.colorScheme!.onSurface[222],
       ),
       child: getCaptionSummaryCell(),
     );
@@ -399,7 +393,7 @@ class GridCaptionSummaryCellRenderer
       key: dataCell.key!,
       dataCell: dataCell,
       backgroundColor:
-          dataGridConfiguration.colorScheme!.onSurface.withOpacity(0.04),
+          dataGridConfiguration.dataGridThemeHelper!.captionSummaryRowColor,
       dataGridStateDetails: _dataGridStateDetails,
       isDirty: dataGridConfiguration.container.isDirty || dataCell.isDirty,
       child: label,
@@ -445,8 +439,8 @@ class GridIndentCellRenderer
       backgroundColor: dataCell.rowIndex >=
               grid_helper
                   .resolveStartIndexBasedOnPosition(dataGridConfiguration)
-          ? dataGridConfiguration.dataGridThemeHelper!.indentColumnColor
-          : Colors.transparent,
+          ? dataGridConfiguration.dataGridThemeHelper!.indentColumnColor!
+          : dataGridConfiguration.colorScheme!.transparent,
       dataGridStateDetails: _dataGridStateDetails,
       isDirty: dataGridConfiguration.container.isDirty || dataCell.isDirty,
       child: newIcon,
@@ -520,8 +514,7 @@ class GroupExpanderIconState extends State<GroupExpanderIcon>
                   ?.groupExpanderIcon ??
               Icon(
                 Icons.expand_less,
-                color: widget.dataGridConfiguration.colorScheme!.onSurface
-                    .withOpacity(0.60),
+                color: widget.dataGridConfiguration.colorScheme!.onSurface[153],
               ),
         );
       },

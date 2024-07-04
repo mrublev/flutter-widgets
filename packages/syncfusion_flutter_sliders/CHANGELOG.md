@@ -1,4 +1,14 @@
-## Unreleased
+## [25.1.35] - 15/03/2024
+
+**General**
+
+* Provided th​e Material 3 themes support.
+
+## [24.1.46] - 17/01/2024
+
+**General**
+
+* Upgraded the `intl` package to the latest version 0.19.0.
 
 ## Range Slider
 
