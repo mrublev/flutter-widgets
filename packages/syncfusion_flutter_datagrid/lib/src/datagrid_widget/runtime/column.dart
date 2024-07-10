@@ -654,7 +654,7 @@ class ColumnSizer {
         break;
     }
     if (startRowIndex <= 0 && endRowIndex <= 0) {
-      return column._actualWidth;
+      return column._actualWidth.isNaN ? 0 : column._actualWidth;
     }
 
     for (int rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
